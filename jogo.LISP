@@ -220,26 +220,12 @@
 ;;;     Funções solução
 ;;; ======================
 
-(defun no-solucaop-a*(no pontuacao)
-  (cond 
-    ((or (>= (no-pontos no) pontuacao) (equal (sucessores (no operadores algoritmo &optional (profundidade 4))) nil)) t)
-    (t nil)
-  )
-)
 
 (defun no-solucaop (no algoritmo)
   (cond 
     ((equal (sucessores no (operadores) algoritmo) nil) t)
     (t nil)))
 
-; SÓ BFS
-(defun solucao-p (sucessores algoritmo)
-  (cond
-   ((null sucessores) nil)
-   ((no-solucaop (first sucessores) algoritmo) (first sucessores))
-   (t (solucao-p (rest sucessores) algoritmo))
- )
-)
 
 (defun escreve-solucao (sucessores algoritmo)
   (cond
@@ -261,8 +247,6 @@
 ;;;     Funções sucessores
 ;;; =========================
 
-;; SÓ PARA BFS E DFS
-
 (defun novo-sucessor(no operador)
   (cond 
    ((null operador) nil)
@@ -283,42 +267,6 @@
      (t (cons (novo-sucessor no (car operadores)) (sucessores no (rest operadores) algoritmo profundidade)))
     )
 ))
-
-;;SÓ PARA BFS
-(defun no-existep-bfs (no lista-nos)
-  (cond
-    ((null lista-nos) nil)
-    ((equal (no-estado no) (no-estado (car lista-nos))) t)
-    (t (no-existep-bfs no (rest lista-nos)))
-  )
-)
-
-(defun sucessores-validos-bfs (sucessores fechados abertos)
-  (cond
-   ((null sucessores) nil)
-   ((not (no-existep-bfs (first sucessores) (append abertos fechados))) (cons (first sucessores) (sucessores-validos-bfs (rest sucessores) fechados abertos)))
-   (t (sucessores-validos-bfs (rest sucessores) fechados abertos))))
-
-
-;;SÓ PARA DFS
-(defun no-existep-dfs (no lista-nos)
-  (cond
-    ((null lista-nos) nil)
-    ((and (equal (no-estado no) (no-estado (car lista-nos))) (> (no-profundidade no)(no-profundidade (first lista-nos)))) t)
-    (t (no-existep-dfs no (rest lista-nos)))
-  )
-)
-
-(defun sucessores-validos-dfs (sucessores fechados abertos)
-  (cond
-   ((null sucessores) nil)
-   ((not (no-existep-dfs (first sucessores) (append abertos fechados))) (cons (first sucessores) (sucessores-validos-dfs (rest sucessores) fechados abertos)))
-   (t (sucessores-validos-dfs (rest sucessores) fechados abertos))))
-
-
-;;SÓ PARA A*
-;; (....completar....)
-
 
 
 ;;; ========================
@@ -390,17 +338,49 @@
 ;;---------------------------------------------------------------------------------------------------------------------------------------------------------
 ;; NOVAS FUNÇÕES
 
-(defun colocar-cavalo-branco (linha1)
+(defun encontrar-maximo-lista (lista &optional (maximo (first lista)))
+  "Função que devolve o valor máximo da lista"
   (cond
-   ((= (length linha1) 1) (first linha1))
-   (t (cons (max (first linha1)) (colocar-cavalo-branco (rest linha1))))
-   )
-  ;(max (first tabuleiro))
+      ((null lista) maximo)
+      ((> (first lista) maximo) (encontrar-maximo-lista (rest lista) (first lista)))
+      (t (encontrar-maximo-lista (rest lista) maximo))
+  )
 )
 
-(defun colocar-cavalo-preto (linha10)
+(defun obter-indice-do-valor-maximo (lista &optional (count 0))
+  (cond
+     ((null lista) nil)
+     ((equal (first lista) (encontrar-maximo-lista lista)) count)
+     (t (obter-indice-do-valor-maximo (rest lista) (1+ count)))
+  )
+)
+
+(defun colocar-cavalo-branco (tabuleiro)
+  "Função que coloca o cavalo branco na posição com maior valor da linha 1"
+  (substituir 0 (obter-indice-do-valor-maximo (linha 1 tabuleiro)) tabuleiro T)
+)
+
+(defun colocar-cavalo-preto (tabuleiro)
+  "Função que coloca o cavalo preto na posição com maior valor da linha 10"
+  (substituir 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro T)
+)
+
+(defun tabuleiro-teste ()
+  '(
+    (02 20 44 1 4 5 66 88 99 2 )
+    (02 20 44 1 4 5 66 88 99 2 )
+    (02 20 44 1 4 5 66 88 99 2 )
+    (02 20 44 1 4 5 66 88 99 2 )
+    (02 20 44 1 4 5 66 88 99 2 )
+    (02 20 44 1 4 5 66 88 99 2 )
+    (02 20 44 1 4 5 66 88 99 2 )
+    (02 20 44 1 4 5 66 88 99 2 )
+    (02 20 44 1 4 5 66 88 99 2 )
+    (02 20 44 1 4 5 66 88 99 2 )
+    )
 )
 
 (defun criar-no-inicial ()
+  
 )
 
