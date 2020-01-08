@@ -23,3 +23,20 @@
 ;;; Valor do nó inicial
 rootNegamaxValue := negamax( rootNode, d, -1) 
 
+
+
+;; NEGAMAX COM CORTES ALFA-BETA
+
+;;; argumentos: nó n, profundidade d, cor c
+;;; b = ramificação (número de sucessores)
+function negamax (n, d, a, ß, c)
+     se d = 0 ou n é terminal
+         return c * valor heuristico de n
+     sucessores := OrderMoves(GenerateMoves(n))
+     bestValue := -8
+     para cada sucessor nk em sucessores
+         bestValue := max (bestValue, -negamax (nk, d-1, -ß, - a, -c))
+         a := max (a, bestValue)
+         se a = ß
+             break
+     return bestValue
