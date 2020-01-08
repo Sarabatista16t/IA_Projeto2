@@ -1,5 +1,5 @@
 ;; ================================================================================================================================
-;;                                            IMPLEMENTAÇÃO DO NEGAMAX 
+;;                                            IMPLEMENTAÃ‡ÃƒO DOS MÃ‰TODOS DE PROCURA  
 ;; ================================================================================================================================
 ;;;; procura.lisp
 ;;;; Disciplina de IA - 2019 / 2020
@@ -10,16 +10,3 @@
 ;; =====================================================================
 ;;                         NEGAMAX
 ;; =====================================================================
-;;; argumentos: nó n, profundidade d, cor c
-;;; b = ramificação (número de sucessores)
- function negamax (n, d, c &aux bestValue)
-     if d = 0 ou n é terminal
-         return c * valor heuristico de n
-     bestValue := -8
-     para cada sucessor de n (n1, ..., nk,..., nb)
-        bestValue := max(bestValue, -negamax(nk, d-1, -c) )
-     return bestValue
-
-;;; Valor do nó inicial
-rootNegamaxValue := negamax( rootNode, d, -1) 
-

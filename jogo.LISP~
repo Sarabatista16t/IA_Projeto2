@@ -1,26 +1,26 @@
 ;; ===============================================================================================================================
-;; ========================================= CÃ“DIGO REFERENTE AO JOGO DO CAVALO ================================================== 
+;; ========================================= CÓDIGO REFERENTE AO JOGO DO CAVALO ================================================== 
 ;; ===============================================================================================================================
 ;;;; jogo.lisp
 ;;;; Disciplina de IA - 2019 / 2020
 ;;;; Projeto 2
-;;;; Autores: Sara Batista [nÂº 170221054] e Carolina Castilho [nÂº 180221078]
+;;;; Autores: Sara Batista [nº 170221054] e Carolina Castilho [nº 180221078]
 
 
 ;;======================================================================================
-;;                                 ESTRUTURA DO NÃ“ 
+;;                                 ESTRUTURA DO NÓ 
 ;;======================================================================================        
-;;           ESTADO (TABULEIRO + PONTUAÃ‡ÃƒO)
+;;           ESTADO (TABULEIRO + PONTUAÇÃO)
 ;;           F 
-;;    NÃ“ =>  G 
+;;    NÓ =>  G 
 ;;           H
-;;           NÃ“-PAI
+;;           NÓ-PAI
 
 
 
 
 ;;; ======================
-;;;    FUNÃ‡ÃƒO DE TESTE
+;;;    FUNÇÃO DE TESTE
 ;;; ======================
 
 (defun no-teste (tabuleiro)
@@ -48,12 +48,12 @@
 
 
 ;;; ========================================================
-;;;                    MÃ‰TODOS SELETORES
+;;;                    MÉTODOS SELETORES
 ;;; ========================================================
 
 
 ;;; ======================
-;;;   VocabulÃ¡rio LISP 
+;;;   Vocabulário LISP 
 ;;; ======================
 
 (defun no-estado(no)
@@ -98,14 +98,14 @@
 
 
 ;;; ===============================================
-;;;    FUNÃ‡Ã•ES AUXILIARES DA PROCURA
+;;;    FUNÇÕES AUXILIARES DA PROCURA
 ;;; ===============================================
 
 ;;; ===========================
-;;;    PosiÃ§Ãµes no tabuleiro
+;;;    Posições no tabuleiro
 ;;; ===========================
 
-; FunÃ§Ã£o que devolve a linha correspondente a um determinado indice
+; Função que devolve a linha correspondente a um determinado indice
 (defun linha (indice tabuleiro)
 "Retorna uma lista que representa a linha no tabuleiro recebido"  
   (cond 
@@ -113,7 +113,7 @@
    (T (linha (- indice 1)  (cdr tabuleiro)))))
 
 
-; FunÃ§Ã£o que devolve a celula correspondente a um determinado indice de linha e coluna
+; Função que devolve a celula correspondente a um determinado indice de linha e coluna
 (defun celula (n x tabuleiro)
 "Retorna o valor presente na celula no tabuleiro, representada pelos dois indices"
 (cond
@@ -122,7 +122,7 @@
  (t (nth x (nth n tabuleiro)))))
 
 
-; FunÃ§Ã£o que 
+; Função que 
 (defun procura-celula (valor tabuleiro &optional (indiceL 0) (indiceC 0))
   (cond
    ((null tabuleiro) nil)
@@ -154,21 +154,21 @@
  (t (equal (mod numero 10) (floor numero 10)))))
 
 
-; FunÃ§Ã£o que
+; Função que
 (defun substituir-posicao (indice lista &optional (valor nil))
   (cond
    ((equal indice 0) (cons valor (rest lista)))
    (t (cons (car lista) (substituir-posicao  (- indice 1) (cdr lista) valor)))))
 
 
-; FunÃ§Ã£o que
+; Função que
 (defun substituir (indiceL indiceC tabuleiro &optional (valor nil))
   (cond 
    ((equal indiceL 0) (cons (substituir-posicao indiceC (car tabuleiro) valor) (rest tabuleiro)))
    (t (cons (car tabuleiro) (substituir (- indiceL 1) indiceC (rest tabuleiro) valor)))))
 
 
-; FunÃ§Ã£o que
+; Função que
 (defun posicao-cavalo (tabuleiro &optional (indiceL 0) (indiceC 0))
     (cond
      ((null tabuleiro) nil)
@@ -181,18 +181,18 @@
 
 
 ;;; =====================================
-;;;     Gerar um tabuleiro aleatÃ³rio
+;;;     Gerar um tabuleiro aleatório
 ;;; =====================================
 
-;; Lista dos nÃºmeros do tabuleiro
+;; Lista dos números do tabuleiro
 (defun lista-numeros (&optional (n 100))
-"cria uma lista com todos os nÃƒÂºmeros entre 0 (inclusive) e n (exclusive)"
+"cria uma lista com todos os nÃºmeros entre 0 (inclusive) e n (exclusive)"
   (cond
    ((equal n 1) (list 0))
    (T (cons (- n 1) (lista-numeros (- n 1))))))
 
 
-;; Remover um valor que jÃ¡ exista no tabuleiro
+;; Remover um valor que já exista no tabuleiro
 (defun remover-se (pred lista)
   (cond 
    ((null lista) nil)
@@ -208,7 +208,7 @@
               (cons numero-aleatorio (baralhar(remover-se  (lambda (x) (= x numero-aleatorio))  lista)))))))
 
 
-;; FunÃ§Ã£o que gera um tabuleiro aleatÃ³rio
+;; Função que gera um tabuleiro aleatório
 (defun tabuleiro-aleatorio (lista n)  
   (cond    
    ((null lista) nil)    
@@ -217,7 +217,7 @@
 
 
 ;;; ======================
-;;;     FunÃ§Ãµes soluÃ§Ã£o
+;;;     Funções solução
 ;;; ======================
 
 (defun no-solucaop-a*(no pontuacao)
@@ -232,7 +232,7 @@
     ((equal (sucessores no (operadores) algoritmo) nil) t)
     (t nil)))
 
-; SÃ“ BFS
+; SÓ BFS
 (defun solucao-p (sucessores algoritmo)
   (cond
    ((null sucessores) nil)
@@ -258,10 +258,10 @@
 )
 
 ;;; =========================
-;;;     FunÃ§Ãµes sucessores
+;;;     Funções sucessores
 ;;; =========================
 
-;; SÃ“ PARA BFS E DFS
+;; SÓ PARA BFS E DFS
 
 (defun novo-sucessor(no operador)
   (cond 
@@ -284,7 +284,7 @@
     )
 ))
 
-;;SÃ“ PARA BFS
+;;SÓ PARA BFS
 (defun no-existep-bfs (no lista-nos)
   (cond
     ((null lista-nos) nil)
@@ -300,7 +300,7 @@
    (t (sucessores-validos-bfs (rest sucessores) fechados abertos))))
 
 
-;;SÃ“ PARA DFS
+;;SÓ PARA DFS
 (defun no-existep-dfs (no lista-nos)
   (cond
     ((null lista-nos) nil)
@@ -316,7 +316,7 @@
    (t (sucessores-validos-dfs (rest sucessores) fechados abertos))))
 
 
-;;SÃ“ PARA A*
+;;SÓ PARA A*
 ;; (....completar....)
 
 
@@ -388,7 +388,7 @@
 
 
 ;;---------------------------------------------------------------------------------------------------------------------------------------------------------
-;; NOVAS FUNÃ‡Ã•ES
+;; NOVAS FUNÇÕES
 
 (defun colocar-cavalo-branco (linha1)
   (cond
