@@ -68,14 +68,6 @@
   (second estado)
 )
 
-(defun no-profundidade(no)
-  (second no)
-)
-
-(defun no-pai(no)
-  (third no)
-)
-
 (defun no-f(no)
   (second no)
 )
@@ -88,12 +80,8 @@
   (fourth no)
 )
 
-(defun no-profundidade-a*(no)
+(defun no-pai(no)
   (fifth no)
-)
-
-(defun no-pai-a*(no)
-  (sixth no)
 )
 
 
@@ -383,4 +371,43 @@
 (defun criar-no-inicial ()
   
 )
+
+
+(defun jogada-humano ()
+; 1) pede a linha e coluna onde quer colocar a peça
+; 2) Verificação se é possivel aplicar algum operador à peça para a colocar no local indicado
+; 3) Se der, atualizar o estado (posicionar o cavalo, somar os pontos) e chamar a jogada do computador
+; 4) Se não der, devolver o estado sem alterações e chamar a jogada do computador
+  (cond 
+   () ;escrever esta dica no ecrã, antes de pedir a jogada: <letra> <numero de 1 a 10>
+; escrever o tabuleiro antes 
+   )
+)
+
+(defun jogada-computador ()
+; 1) aplica o Negamax e escolhe a melhor posição para colocar o cavalo
+; 2) Se der, atualiza o estado (posicionar o cavalo, somar os pontos), devolve-o e chama a jogada do humano
+; 4) Se não der para mover o cavalo, devolve o estado sem alterações e chama a jogada do computador
+  (cond 
+   ()
+   )
+)
+
+(defun jogar (estado tempo) ; Pedido no enunciado
+  ; alternar entre os jogadores
+)
+
+(defun funcao-avaliacao-nos-folha (pontos-jogador1 pontos-jogador2) ; (jogada => estado (tabuleiro + pontuação) + )
+  (cond
+   ((> pontos-jogador1 pontos-jogador2) 1) ; ganha jogador 1 / perde jogador 2
+   ((equal pontos-jogador1 pontos-jogador2) 0) ; empate
+   (t -1) ; perde jogador 1 / ganha jogador 2
+   )
+)
+
+(defun funcao-avaliacao-pseudo-nos-folha (pontos-jogador1 pontos-jogador2)
+  ; max pontos = 5050
+  (/ (* 0.99 (- pontos-jogador1 pontos-jogador2)) 5050)
+)
+
 

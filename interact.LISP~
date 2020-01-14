@@ -9,10 +9,10 @@
 
 ;; CARREGAR FICHEIROS
 
-;(load "C:\\Users\\Carolina\\Desktop\\Projeto\\puzzle2.LISP")
-;(load "C:\\Users\\Carolina\\Desktop\\Projeto\\procura2.LISP")
-(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5∫ Semestre\\InteligÍncia Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
-(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5∫ Semestre\\InteligÍncia Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
+(load "C:\\Users\\Carolina\\Desktop\\Projeto\\puzzle2.LISP")
+(load "C:\\Users\\Carolina\\Desktop\\Projeto\\procura2.LISP")
+;(load "C:\\Users\\Carolina\\OneDrive\\3¬∫Ano\\IA\\Projeto\\puzzle.LISP")
+;(load "C:\\Users\\Carolina\\OneDrive\\3¬∫Ano\\IA\\Projeto\\procura.LISP")
 
 ;;=========================================
 ;;      INPUT E LEITURA DE FICHEIROS  
@@ -25,13 +25,18 @@
     (format t "Introduza o n√∫mero do problema que pretende testar [1 at√© 6]: ~%") ;; ~% -> mudar de linha  
   ; Ler ficheiro
    (with-open-file (f1 "C:\\Users\\Carolina\\OneDrive\\3¬∫Ano\\IA\\Projeto\\problemas.dat" :direction :input) ;; ficheiro f1 -> problemas.dat 
-      ;;(with-open-file (f2 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5∫ Semestre\\InteligÍncia Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output) 
+      ;;(with-open-file (f2 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5¬∫ Semestre\\Intelig√™ncia Artificial\\Projeto1\\resultados.dat" :direction :output) ; ficheiro f2 -> onde vai ser escrito o resultado do jogo
         (jogar (criar-no-inicial (ler-tabuleiro f1 (read))))
+         ; (escrever-tabuleiro (jogar (criar-no-inicial (ler-tabuleiro f1 (read))) sucessores operadores solucao) f2)
+         ; escrever-penetrancia
+         ; escrever-fator-de-ramificacao
+         ;)
+
       )
 )
 
 
-;; FunÁ„o para ler o tabuleiro do ficheiro
+;; Fun√ß√£o para ler o tabuleiro do ficheiro
 (defun ler-tabuleiro (f1 n)
   "Devolve uma lista que representa o tabuleiro de jogo"
   (cond 
@@ -87,7 +92,33 @@
 )
 
 
-;; FunÁ„o para ler a profundidade
+(defun validar-input-utilizador (n)
+  (cond 
+   ((> n 6) (format t "N√∫mero inv√°lido ~% Introduza o n√∫mero do problema que pretende testar [1 at√© 6]:"))
+   (t nil)
+  )
+)
+
+
+;; Fun√ß√£o para ler o algoritmo
+(defun ler-algoritmo ()
+"Permite fazer a leitura do algoritmo a utilizar."
+  (progn
+    (format t "Que algoritmo quer usar para procurar? ~%")
+    (format t "1- Procura na largura ~%")
+    (format t "2- Procura na profundidade ~%")
+    (format t "3- Algoritmo A* ~%")
+    (let ((resposta (read)))
+      (cond 
+       ((= resposta 1) 'breadth-first)
+       ((= resposta 2) 'depth-first)
+       (t 'a*))
+    )
+  )
+)
+
+
+;; Fun√ß√£o para ler a profundidade
 (defun ler-profundidade()
 "Permite fazer a leitura da profundidade limite para o algoritmo dfs."
     (progn
@@ -100,39 +131,16 @@
 ;;            INICIAR O JOGO  
 ;;=========================================
 
-(defun escrever-cabecalho (f)
-  (format f "~%=============================================================================~%")
-  (format f "UC Inteligencia Artificial                               Ano letivo 2019/2020~%~%")
-  (format f "Projeto realizado por:~%")
-  (format f "   * Sara Batista, numero 170221054~%")
-  (format f "   * Carolina Castilho, numero 180221078~%")
-  (format f "~%=============================================================================~%~%")
- )
-
-(defun menu ()
-   (progn
-    (escrever-cabecalho t)
-    (format t "Selecione o modo de jogo: ~%")
-    (format t "1 -> Humano vs Computador ~%")
-    (format t "2 -> Computador vs Computador ~%")
-    (let ((resposta (read)))
-      (cond 
-       ((= resposta 1) (humano-computador))
-       (t (computador-computador))
-       )
-      )
-    )
-)
-
-(defun humano-computador ()
-  (progn
-    (format t "~%Selecione o 1∫ jogador: ~%")
-    (format t "1 -> Humano ~%")
-    (format t "2 -> Computador ~%")
-    (read) ; incompleto
-    (format t "~%Indique o tempo limite para a jogada do computador: [segundos] ~%")
-    (read) ; 1000 e 5000 milissegundos
-    )
+;; FunÁ„o para iniciar o jogo
+(defun jogar (estado tempo) ; Pedido no enunciado
+"Permite iniciar o programa, fazendo a leitura do teclado do estado inicial e do algoritmo a utilizar para procurar a solu√ß√£o (neste caso a procura na profundidade ou na largura)"
+  (let* ((algoritmo (ler-algoritmo))
+         (profundidade (cond ((eql algoritmo 'depth-first) (ler-profundidade)) (T 9999))) )
+	(cond
+		((equal algoritmo 'breadth-first) (breadth-first no-inicial 'sucessores 'no-solucaop 'solucao-p 'operadores))
+		((equal algoritmo 'depth-first) (depth-first no-inicial profundidade 'sucessores 'no-solucaop 'operadores))
+	)
+  )
 )
 
 
@@ -140,14 +148,26 @@
 ;;                OUTPUT  
 ;;=========================================
 
-;; FunÁ„o para escrever o tabuleiro no final do jogo num ficheiro
+;; Fun√ß√£o para escrever o tabuleiro no final do jogo num ficheiro
 (defun escrever-tabuleiro-final-jogo (tabuleiro f2)
   "Escreve no ficheiro a lista que representa o tabuleiro atualizado no final do jogo"
   (format f2 "~A" tabuleiro)
 )
 
-;; FunÁıes para escrever as estatisticas num ficheiro
+;; Fun√ß√µes para escrever as estat√≠sticas num ficheiro
 
+;; Escrever penetr√¢ncia
+(defun escrever-penetrancia (tabuleiro f2)
+  "Escreve no ficheiro o valor da penetr√¢ncia"
+  (format f2 "~A" tabuleiro)
+;(...completar...)
+)
 
+;; Escrever fator de ramifica√ß√£o
+(defun escrever-fator-de-ramificacao (tabuleiro f2)
+  "Escreve no ficheiro o valor do fator de ramifica√ß√£o"
+  (format f2 "~A" tabuleiro)
+;(...completar...)
+)
 
 
