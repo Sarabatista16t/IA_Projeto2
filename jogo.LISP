@@ -326,6 +326,10 @@
 ;;---------------------------------------------------------------------------------------------------------------------------------------------------------
 ;; NOVAS FUNÇÕES
 
+;;======================================================================================
+;;                "OPERADOR 0" (posicionar os cavalos no inicio do jogo)
+;;======================================================================================        
+
 (defun encontrar-maximo-lista (lista &optional (maximo (first lista)))
   "Função que devolve o valor máximo da lista"
   (cond
@@ -373,16 +377,45 @@
 )
 
 
-(defun jogada-humano ()
+;;======================================================================================
+;;                                 JOGAR 
+;;======================================================================================        
+
+; Constantes
+
+(let ((jogador1 1)
+      (jogador2 -1))
+
+     (defun jogada-jogador1 (valor)
+       (setf jogador1 valor))
+
+     (defun jogada-jogador2 (valor)
+       (setf jogador2 valor))
+)
+
+
 ; 1) pede a linha e coluna onde quer colocar a peça
 ; 2) Verificação se é possivel aplicar algum operador à peça para a colocar no local indicado
 ; 3) Se der, atualizar o estado (posicionar o cavalo, somar os pontos) e chamar a jogada do computador
 ; 4) Se não der, devolver o estado sem alterações e chamar a jogada do computador
-  (cond 
-   () ;escrever esta dica no ecrã, antes de pedir a jogada: <letra> <numero de 1 a 10>
+
+;escrever esta dica no ecrã, antes de pedir a jogada: <letra> <numero de 1 a 10>
 ; escrever o tabuleiro antes 
-   )
+
+(defun jogada-humano (tabuleiro jogador)
+  (format t "Introduza a linha e a coluna onde pretende colocar a peça: ~%")
+  (format t "<letra> <numero de 1 a 10> ~%")
+  (let* ((numero (read))
+        (linha (floor numero 10))
+        (coluna (mod numero 10)))
+    (cond
+     ((and (and (< coluna (length (car tabuleiro))) (< linha (length tabuleiro)))(equal jogador 'jogador1)) (colocar-peca linha coluna tabuleiro 1))
+     ((and (and (< coluna (length (car tabuleiro))) (< linha (length tabuleiro)))(equal jogador 'jogador2)) (colocar-peca linha coluna tabuleiro -1))
+     (t nil))
+    )
 )
+
+
 
 (defun jogada-computador ()
 ; 1) aplica o Negamax e escolhe a melhor posição para colocar o cavalo
