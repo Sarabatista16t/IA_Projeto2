@@ -11,7 +11,7 @@
 ;;                         NEGAMAX
 ;; =====================================================================
 
-(defun negamax-sucessores (no d jogador sucessores alfa beta &optional (bestValue most-negative-fixnum))
+(defun negamax-sucessores (estado d jogador sucessores alfa beta &optional (bestValue most-negative-fixnum))
   (cond
    ((null sucessores) alfa)
    (t
@@ -20,12 +20,12 @@
            (newAlfa (max alfa bestSucessor)))
       (cond
        ((>= newAlfa beta) bestSucessor)
-       (t (negamax-sucessores no d  jogador (rest sucessores) newAlfa beta bestSucessor)))))))
+       (t (negamax-sucessores estado d  jogador (rest sucessores) newAlfa beta bestSucessor)))))))
 
 
-(defun negamax (no d jogador &optional (alfa most-negative-fixnum) (beta most-positive-fixnum)) 
-  (let ((sucessores (sucessores no (operadores) d jogador)))
+(defun negamax (estado d jogador &optional (alfa most-negative-fixnum) (beta most-positive-fixnum)) 
+  (let ((sucessores (sucessores estado (operadores) d jogador)))
     (cond
-     ((or (equal d 0) (null sucessores)) (funcao-avaliacao (no-estado no) jogador)) ;;acrescentar a multiplicação com a heuristica no projeto (?)
+     ((or (equal d 0) (null sucessores)) (funcao-avaliacao estado jogador)) ;;acrescentar a multiplicação com a heuristica no projeto (?)
 ;;gero o 1o sucessor do no
-     (t (negamax-sucessores no (- d 1) (- jogador) sucessores (- alfa) (- beta))))))
+     (t (negamax-sucessores estado (- d 1) (- jogador) sucessores (- alfa) (- beta))))))

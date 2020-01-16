@@ -10,7 +10,7 @@
 ;;======================================================================================
 ;;                                 ESTRUTURA DO NÓ 
 ;;======================================================================================        
-;;           ESTADO (TABULEIRO + PONTUAÇÃO)
+;;           ESTADO (TABULEIRO + PONTUAÇÃO_CAVALO_BRANCO + PONTUAÇÃO_CAVALO_PRETO)
 ;;           F 
 ;;    NÓ =>  G 
 ;;           H
@@ -64,8 +64,12 @@
   (first estado)
 )
 
-(defun no-pontos(estado)
+(defun no-pontos-cavalo-branco(estado)
   (second estado)
+)
+
+(defun no-pontos-cavalo-preto(estado)
+  (third estado)
 )
 
 (defun no-f(no)
@@ -235,26 +239,28 @@
 ;;;     Funções sucessores
 ;;; =========================
 
-(defun novo-sucessor(no operador)
+(defun novo-sucessor (estado operador)
   (cond 
    ((null operador) nil)
-   (t (let ((estado (funcall operador (no-estado no))))
+   (t (let ((estado-no (funcall operador estado)))
         (cond
-         ((equal estado nil) nil)
-         (t (list estado (1+ (no-profundidade no)) no)))))))
+         ((equal estado-no nil) nil)
+         (t estado-no))))
+   )
+)
 
 
-(defun sucessores(no operadores algoritmo &optional (profundidade 4))
-  (let ((sucessor (novo-sucessor no (car operadores))))
+(defun sucessores (estado operadores)
+  (let ((sucessor (novo-sucessor estado (car operadores))))
    (cond
      ((null operadores) nil)
-     ((and (equal algoritmo "dfs") (equal (no-profundidade no) profundidade)) nil)
 
-     ((equal sucessor nil) (sucessores no (rest operadores) algoritmo profundidade))
+     ((equal sucessor nil) (sucessores estado (rest operadores)))
 
-     (t (cons (novo-sucessor no (car operadores)) (sucessores no (rest operadores) algoritmo profundidade)))
+     (t (cons (novo-sucessor estado (car operadores)) (sucessores estado (rest operadores))))
     )
-))
+   )
+)
 
 
 ;;; ========================
@@ -323,9 +329,6 @@
    (t (cons (list (cria-no (car lista) 1 no-inicial)) (primeiros-sucessores (cdr lista) no-inicial)))))
 
 
-;;---------------------------------------------------------------------------------------------------------------------------------------------------------
-;; NOVAS FUNÇÕES
-
 ;;======================================================================================
 ;;                "OPERADOR 0" (posicionar os cavalos no inicio do jogo)
 ;;======================================================================================        
@@ -373,7 +376,7 @@
 )
 
 (defun criar-no-inicial ()
-  
+  ; completar...
 )
 
 
@@ -383,23 +386,35 @@
 
 ; Constantes
 
-(let ((jogador1 1)
-      (jogador2 -1)
-      (*jogada* nil) ; tabuleiro a ser passado ao adversário
+(let ((*jogada* nil) ; tabuleiro a ser passado ao adversário, pontos cavalo-branco e pontos cavalo-preto
       (*tempo* 1)) ; tempo máximo para o computador jogar (milisegundos)
 
-     (defun jogador1 (valor)
-       (setf jogador1 valor))
-
-     (defun jogador2 (valor)
-       (setf jogador2 valor))
-
      ; *jogada*
-     (defun alterar-jogada (tabuleiro)
-       (setf *jogada* tabuleiro))
+     (defun alterar-jogada (jogada)
+       (setf *jogada* jogada))
+
+     (defun alterar-tabuleiro (tabuleiro)
+       (setf *jogada* (list tabuleiro (second *jogada*) (third *jogada*))))
+
+     (defun alterar-pontos-cavalo-branco (pontos)
+       (setf *jogada* (list (first *jogada*) pontos (third *jogada*))))
+
+     (defun alterar-pontos-cavalo-preto (pontos)
+       (setf *jogada* (list (first *jogada*) (second *jogada*) pontos)))
+
 
      (defun obter-jogada ()
        *jogada*)
+
+     (defun obter-tabuleiro ()
+       (first *jogada*))
+
+     (defun obter-pontos-cavalo-branco ()
+       (second *jogada*))
+
+     (defun obter-pontos-cavalo-preto ()
+       (third *jogada*))
+
 
      ; *tempo*
      (defun alterar-tempo (tempo)
@@ -410,6 +425,9 @@
 )
 
 
+; ATENÇÃO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! JOGADOR 1 = -1 & jOGADOR 2 = -2 !!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 ; 1) pede a linha e coluna onde quer colocar a peça
 ; 2) Verificação se é possivel aplicar algum operador à peça para a colocar no local indicado
 ; 3) Se der, atualizar o estado (posicionar o cavalo, somar os pontos) e chamar a jogada do computador
@@ -418,7 +436,6 @@
 ;escrever esta dica no ecrã, antes de pedir a jogada: <letra> <numero de 1 a 10>
 ; escrever o tabuleiro antes 
 
-
 (defun jogada-humano (tabuleiro jogador)
   (format t "Introduza a linha e a coluna onde pretende colocar a peça: ~%")
   (format t "<letra> <numero de 1 a 10> ~%")
@@ -426,14 +443,18 @@
         (linha (floor numero 10))
         (coluna (mod numero 10)))
     (cond
-     ((and (equal jogador 'jogador1) (movimento-válido linha coluna)) (let ((jogada_aux (alterar-jogada (colocar-peca linha coluna tabuleiro 1)))) ; atualiza a variável *jogada*
+     ((and (equal jogador 'jogador1) (movimento-válido linha coluna)) (let ((jogada_aux (alterar-jogada (colocar-peca linha coluna tabuleiro -1)))) ; atualiza a variável *jogada*
                                                                         (jogada-computador (obter-jogada) 'jogador2) ; manda o tabuleiro ao adversário
                                                                         ))
-     ((and (equal jogador 'jogador2) (movimento-válido linha coluna)) (let ((jogada_aux2 (alterar-jogada (colocar-peca linha coluna tabuleiro -1)))) ; atualiza a variável *jogada*
+     ((and (equal jogador 'jogador2) (movimento-válido linha coluna)) (let ((jogada_aux2 (alterar-jogada (colocar-peca linha coluna tabuleiro -2)))) ; atualiza a variável *jogada*
                                                                         (jogada-computador (obter-jogada) 'jogador1) ; manda o tabuleiro ao adversário
                                                                         ))
      (t nil))
     )
+)
+
+(defun colocar-peca (linha coluna tabuleiro &optional (valor 0))
+  (substituir-posicao linha tabuleiro (substituir-posicao coluna (linha linha tabuleiro) valor))
 )
 
 
@@ -457,20 +478,18 @@
 ; 2) atualiza a variável global *jogada*
 ; 3) chama a jogada do humano
 
-; calcular a profundidade consoante o tempo
-
-  (let (()
+  ;(let (()  ; NOTA: calcular a profundidade consoante o tempo
         (cond
-         ((equal jogador 'jogador1) (let ((jogada_aux (alterar-jogada (negamax no profundidade jogador)))) ; atualiza a variável *jogada*
-                                      (jogada-humano (obter-jogada) 'jogador2) ; manda o tabuleiro ao adversário
+         ((equal jogador 'jogador1) (let ((jogada_aux (alterar-jogada (negamax (obter-jogada) 6 jogador)))) ; atualiza a variável *jogada*
+                                      (jogada-humano (obter-tabuleiro) 'jogador2) ; manda o tabuleiro ao adversário
                                       ))
          
-         ((equal jogador 'jogador2) (let ((jogada_aux2 (alterar-jogada (negamax no profundidade jogador)))) ; atualiza a variável *jogada*
-                                      (jogada-humano (obter-jogada) 'jogador1) ; manda o tabuleiro ao adversário
+         ((equal jogador 'jogador2) (let ((jogada_aux2 (alterar-jogada (negamax (obter-jogada) 6 jogador)))) ; atualiza a variável *jogada*
+                                      (jogada-humano (obter-tabuleiro) 'jogador1) ; manda o tabuleiro ao adversário
                                       ))
-         (t nil))
-    )
-  )
+         (t nil)
+         )
+  ;)
 )
 
 (defun terminou-jogo ()
@@ -480,8 +499,8 @@
 (defun jogar (estado tempo primeiro-jogador) ; Por default começa o Computador
   ; alternar entre os jogadores
   (cond 
-   ((equal primeiro-jogador "humano") (jogada-humano (no-tabuleiro estado) "jogador1"))
-   (t (jogada-computador (no-tabuleiro estado) "jogador1"))
+   ((equal primeiro-jogador 'humano) (jogada-humano (no-tabuleiro estado) 'jogador1))
+   (t (jogada-computador (no-tabuleiro estado) 'jogador1))
    )
 )
 
