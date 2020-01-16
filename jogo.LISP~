@@ -326,6 +326,10 @@
 ;;---------------------------------------------------------------------------------------------------------------------------------------------------------
 ;; NOVAS FUNÇÕES
 
+;;======================================================================================
+;;                "OPERADOR 0" (posicionar os cavalos no inicio do jogo)
+;;======================================================================================        
+
 (defun encontrar-maximo-lista (lista &optional (maximo (first lista)))
   "Função que devolve o valor máximo da lista"
   (cond
@@ -373,35 +377,97 @@
 )
 
 
-(defun jogada-humano ()
+;;======================================================================================
+;;                                 JOGAR 
+;;======================================================================================        
+
+; Constantes
+
+(let ((jogador1 1)
+      (jogador2 -1))
+
+     (defun jogada-jogador1 (valor)
+       (setf jogador1 valor))
+
+     (defun jogada-jogador2 (valor)
+       (setf jogador2 valor))
+)
+
+
 ; 1) pede a linha e coluna onde quer colocar a peça
 ; 2) Verificação se é possivel aplicar algum operador à peça para a colocar no local indicado
 ; 3) Se der, atualizar o estado (posicionar o cavalo, somar os pontos) e chamar a jogada do computador
 ; 4) Se não der, devolver o estado sem alterações e chamar a jogada do computador
-  (cond 
-   () ;escrever esta dica no ecrã, antes de pedir a jogada: <letra> <numero de 1 a 10>
+
+;escrever esta dica no ecrã, antes de pedir a jogada: <letra> <numero de 1 a 10>
 ; escrever o tabuleiro antes 
+
+(defvar *jogada* nil) ; tabuleiro a ser passado ao adversário
+
+(defun jogada-humano (tabuleiro jogador)
+  (format t "Introduza a linha e a coluna onde pretende colocar a peça: ~%")
+  (format t "<letra> <numero de 1 a 10> ~%")
+  (let* ((numero (read))
+        (linha (floor numero 10))
+        (coluna (mod numero 10)))
+    (cond
+     ((and (equal jogador 'jogador1) (movimento-válido linha coluna)) (let ((jogada_aux (setf *jogada* (colocar-peca linha coluna tabuleiro 1)))) 
+                                                                        (jogada-computador *jogada* "jogador2")
+                                                                        ))
+     ((and (equal jogador 'jogador2) (movimento-válido linha coluna)) (let ((jogada_aux (setf *jogada* (colocar-peca linha coluna tabuleiro -1)))) 
+                                                                        (jogada-computador *jogada* "jogador1")
+                                                                        ))
+     (t nil))
+    )
+)
+
+
+(defun posicoes-validas (tabuleiro)
+  "Devolve todas as posições válidas para mover o cavalo do utilizador"
+  ;(sucessores(no operadores algoritmo &optional (profundidade 4))
+)
+
+(defun movimento-válido (linha coluna)
+  "Verifica se é possível aplicar algum operador de modo a colocar o cavalo na prosição que o utilizador pretende"
+
+  (cond
+   ((and (< coluna (length (car tabuleiro))) (< linha (length tabuleiro))) t) ; verifica se está dentro dos limites do tabuleiro
+   ;() ; verifica se pudemos aplicar algum operador que dê aquela casa do tabuleiro
+   (t nil)
    )
 )
 
-(defun jogada-computador ()
-; 1) aplica o Negamax e escolhe a melhor posição para colocar o cavalo
-; 2) Se der, atualiza o estado (posicionar o cavalo, somar os pontos), devolve-o e chama a jogada do humano
-; 4) Se não der para mover o cavalo, devolve o estado sem alterações e chama a jogada do computador
-  (cond 
-   ()
+(defun jogada-computador (tabuleiro jogador)
+; 1) aplica o Negamax
+; 2) atualiza o estado (posicionar o cavalo, somar os pontos), devolve-o 
+; 3) chama a jogada do humano
+  (cond
    )
 )
 
-(defun jogar (estado tempo) ; Pedido no enunciado
+(defun terminou-jogo ()
+  ; o jogo termina se não der para mover mais o cavalo (sucessores NIL)
+)
+
+(defun jogar (estado tempo primeiro-jogador) ; Por default começa o Computador
   ; alternar entre os jogadores
+  (cond 
+   ((equal primeiro-jogador "humano") (jogada-humano (no-tabuleiro estado) "jogador1"))
+   (t (jogada-computador (no-tabuleiro estado) "jogador1"))
+   )
 )
 
-(defun funcao-avaliacao ()
+(defun funcao-avaliacao-nos-folha (pontos-jogador1 pontos-jogador2) ; (jogada => estado (tabuleiro + pontuação) + )
+  (cond
+   ((> pontos-jogador1 pontos-jogador2) 1) ; ganha jogador 1 / perde jogador 2
+   ((equal pontos-jogador1 pontos-jogador2) 0) ; empate
+   (t -1) ; perde jogador 1 / ganha jogador 2
+   )
 )
 
-(defun funcao-utilidade (tabuleiro l c)
-  (+ (celula l 0 tabuleiro) (celula l 1 tabuleiro) (celula l 2 tabuleiro) (celula 0 c tabuleiro) (celula 1 c tabuleiro) (celula 2 c tabuleiro))
+(defun funcao-avaliacao-pseudo-nos-folha (pontos-jogador1 pontos-jogador2)
+  ; max pontos = 5050
+  (/ (* 0.99 (- pontos-jogador1 pontos-jogador2)) 5050)
 )
 
 

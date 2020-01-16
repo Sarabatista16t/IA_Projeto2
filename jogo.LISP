@@ -384,13 +384,29 @@
 ; Constantes
 
 (let ((jogador1 1)
-      (jogador2 -1))
+      (jogador2 -1)
+      (*jogada* nil) ; tabuleiro a ser passado ao adversário
+      (*tempo* 1)) ; tempo máximo para o computador jogar (milisegundos)
 
-     (defun jogada-jogador1 (valor)
+     (defun jogador1 (valor)
        (setf jogador1 valor))
 
-     (defun jogada-jogador2 (valor)
+     (defun jogador2 (valor)
        (setf jogador2 valor))
+
+     ; *jogada*
+     (defun alterar-jogada (tabuleiro)
+       (setf *jogada* tabuleiro))
+
+     (defun obter-jogada ()
+       *jogada*)
+
+     ; *tempo*
+     (defun alterar-tempo (tempo)
+       (setf *tempo* tempo))
+
+     (defun obter-tempo ()
+       *tempo*)
 )
 
 
@@ -402,6 +418,7 @@
 ;escrever esta dica no ecrã, antes de pedir a jogada: <letra> <numero de 1 a 10>
 ; escrever o tabuleiro antes 
 
+
 (defun jogada-humano (tabuleiro jogador)
   (format t "Introduza a linha e a coluna onde pretende colocar a peça: ~%")
   (format t "<letra> <numero de 1 a 10> ~%")
@@ -409,25 +426,63 @@
         (linha (floor numero 10))
         (coluna (mod numero 10)))
     (cond
-     ((and (and (< coluna (length (car tabuleiro))) (< linha (length tabuleiro)))(equal jogador 'jogador1)) (colocar-peca linha coluna tabuleiro 1))
-     ((and (and (< coluna (length (car tabuleiro))) (< linha (length tabuleiro)))(equal jogador 'jogador2)) (colocar-peca linha coluna tabuleiro -1))
+     ((and (equal jogador 'jogador1) (movimento-válido linha coluna)) (let ((jogada_aux (alterar-jogada (colocar-peca linha coluna tabuleiro 1)))) ; atualiza a variável *jogada*
+                                                                        (jogada-computador (obter-jogada) 'jogador2) ; manda o tabuleiro ao adversário
+                                                                        ))
+     ((and (equal jogador 'jogador2) (movimento-válido linha coluna)) (let ((jogada_aux2 (alterar-jogada (colocar-peca linha coluna tabuleiro -1)))) ; atualiza a variável *jogada*
+                                                                        (jogada-computador (obter-jogada) 'jogador1) ; manda o tabuleiro ao adversário
+                                                                        ))
      (t nil))
     )
 )
 
 
+(defun posicoes-validas (tabuleiro)
+  "Devolve todas as posições válidas para mover o cavalo do utilizador"
+  ;(sucessores(no operadores algoritmo &optional (profundidade 4))
+)
 
-(defun jogada-computador ()
-; 1) aplica o Negamax e escolhe a melhor posição para colocar o cavalo
-; 2) Se der, atualiza o estado (posicionar o cavalo, somar os pontos), devolve-o e chama a jogada do humano
-; 4) Se não der para mover o cavalo, devolve o estado sem alterações e chama a jogada do computador
-  (cond 
-   ()
+(defun movimento-válido (linha coluna)
+  "Verifica se é possível aplicar algum operador de modo a colocar o cavalo na prosição que o utilizador pretende"
+
+  (cond
+   ((and (< coluna (length (car tabuleiro))) (< linha (length tabuleiro))) t) ; verifica se está dentro dos limites do tabuleiro
+   ;() ; verifica se pudemos aplicar algum operador que dê aquela casa do tabuleiro
+   (t nil)
    )
 )
 
-(defun jogar (estado tempo) ; Pedido no enunciado
+(defun jogada-computador (tabuleiro jogador)
+; 1) aplica o Negamax
+; 2) atualiza a variável global *jogada*
+; 3) chama a jogada do humano
+
+; calcular a profundidade consoante o tempo
+
+  (let (()
+        (cond
+         ((equal jogador 'jogador1) (let ((jogada_aux (alterar-jogada (negamax no profundidade jogador)))) ; atualiza a variável *jogada*
+                                      (jogada-humano (obter-jogada) 'jogador2) ; manda o tabuleiro ao adversário
+                                      ))
+         
+         ((equal jogador 'jogador2) (let ((jogada_aux2 (alterar-jogada (negamax no profundidade jogador)))) ; atualiza a variável *jogada*
+                                      (jogada-humano (obter-jogada) 'jogador1) ; manda o tabuleiro ao adversário
+                                      ))
+         (t nil))
+    )
+  )
+)
+
+(defun terminou-jogo ()
+  ; o jogo termina se não der para mover mais o cavalo (sucessores NIL)
+)
+
+(defun jogar (estado tempo primeiro-jogador) ; Por default começa o Computador
   ; alternar entre os jogadores
+  (cond 
+   ((equal primeiro-jogador "humano") (jogada-humano (no-tabuleiro estado) "jogador1"))
+   (t (jogada-computador (no-tabuleiro estado) "jogador1"))
+   )
 )
 
 (defun funcao-avaliacao-nos-folha (pontos-jogador1 pontos-jogador2) ; (jogada => estado (tabuleiro + pontuação) + )
