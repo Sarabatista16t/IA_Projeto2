@@ -18,16 +18,15 @@
 ;;      INPUT E LEITURA DE FICHEIROS  
 ;;=========================================
 
-;;; InicializaÃ§Ã£o do programa
+;;; Inicialização do programa
 (defun iniciar ()
-  
-  ; Pergunta inicial
-    (format t "Introduza o nÃºmero do problema que pretende testar [1 atÃ© 6]: ~%") ;; ~% -> mudar de linha  
+  (menu)
+  (format t "Introduza o número do problema que pretende testar [1 ao 6]: ~%") ;; ~% -> mudar de linha  
   ; Ler ficheiro
-   (with-open-file (f1 "C:\\Users\\Carolina\\OneDrive\\3ÂºAno\\IA\\Projeto\\problemas.dat" :direction :input) ;; ficheiro f1 -> problemas.dat 
-      ;;(with-open-file (f2 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output) 
-        (jogar (criar-no-inicial (ler-tabuleiro f1 (read))))
-      )
+  (with-open-file (f1 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\problemas.dat" :direction :input) ;; ficheiro f1 -> problemas.dat 
+    ;;(with-open-file (f2 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output) 
+    (jogar (posicionar-jogadores-no-tabuleiro (ler-tabuleiro f1 (read))) 5 'humano)
+    )
 )
 
 

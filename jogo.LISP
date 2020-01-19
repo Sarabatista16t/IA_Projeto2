@@ -37,10 +37,6 @@
   (list estado g pai)
 )
 
-(defun criar-no-inicial (tabuleiro)
-  (list (list tabuleiro 0) 0 nil)
-)
-
 (defun operadores ()
  "Cria uma lista com todos os operadores do problema das vasilhas."
  (list 'operador-1 'operador-2 'operador-3 'operador-4 'operador-5 'operador-6 'operador-7 'operador-8))
@@ -362,12 +358,12 @@
 
 (defun colocar-cavalo-branco (tabuleiro)
   "Função que coloca o cavalo branco na posição com maior valor da linha 1"
-  (substituir 0 (obter-indice-do-valor-maximo (linha 1 tabuleiro)) tabuleiro T)
+  (substituir 0 (obter-indice-do-valor-maximo (linha 1 tabuleiro)) tabuleiro -1)
 )
 
 (defun colocar-cavalo-preto (tabuleiro)
   "Função que coloca o cavalo preto na posição com maior valor da linha 10"
-  (substituir 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro T)
+  (substituir 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro -2)
 )
 
 (defun tabuleiro-teste ()
@@ -385,8 +381,11 @@
     )
 )
 
-(defun criar-no-inicial ()
-  ; completar...
+(defun posicionar-jogadores-no-tabuleiro (tabuleiro)
+  "Função que cria o nó inicial com o tabuleiro que é lido do ficheiro e aplica as funções para colocar os cavalos no inicio do jogo"
+  (colocar-cavalo-preto (colocar-cavalo-branco tabuleiro)) 
+  ; jogador 1  =>  -1  =>   cavalo branco
+  ; jogador 2  =>  -2  =>   cavalo preto
 )
 
 
@@ -438,15 +437,11 @@
 ; ATENÇÃO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! JOGADOR 1 = -1 & jOGADOR 2 = -2 !!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-; 1) pede a linha e coluna onde quer colocar a peça
-; 2) Verificação se é possivel aplicar algum operador à peça para a colocar no local indicado
-; 3) Se der, atualizar o estado (posicionar o cavalo, somar os pontos) e chamar a jogada do computador
-; 4) Se não der, devolver o estado sem alterações e chamar a jogada do computador
-
-;escrever esta dica no ecrã, antes de pedir a jogada: <letra> <numero de 1 a 10>
-; escrever o tabuleiro antes 
 
 (defun jogada-humano (tabuleiro jogador)
+
+; NOTA: escrever o tabuleiro antes 
+
   (format t "Introduza a linha e a coluna onde pretende colocar a peça: ~%")
   (format t "<letra> <numero de 1 a 10> ~%")
   (let* ((numero (read))
@@ -468,9 +463,9 @@
 )
 
 
-(defun posicoes-validas (tabuleiro)
+(defun posicoes-validas (tabuleiro) ; ????????????????? NÃO ESTA A FUNCIONAR
   "Devolve todas as posições válidas para mover o cavalo do utilizador"
-  ;(sucessores(no operadores algoritmo &optional (profundidade 4))
+  (sucessores (list tabuleiro 0) (operadores))
 )
 
 (defun movimento-válido (linha coluna)
@@ -506,11 +501,11 @@
   ; o jogo termina se não der para mover mais o cavalo (sucessores NIL)
 )
 
-(defun jogar (estado tempo primeiro-jogador) ; Por default começa o Computador
+(defun jogar (tabuleiro tempo primeiro-jogador) ; Por default começa o Computador
   ; alternar entre os jogadores
   (cond 
-   ((equal primeiro-jogador 'humano) (jogada-humano (no-tabuleiro estado) 'jogador1))
-   (t (jogada-computador (no-tabuleiro estado) 'jogador1))
+   ((equal primeiro-jogador 'humano) (jogada-humano tabuleiro 'jogador1))
+   (t (jogada-computador tabuleiro 'jogador1))
    )
 )
 
