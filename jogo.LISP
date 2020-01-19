@@ -235,10 +235,10 @@
 ;;;     Funções sucessores
 ;;; =========================
 
-(defun novo-sucessor (estado operador)
+(defun novo-sucessor (estado operador jogador)
   (cond 
    ((null operador) nil)
-   (t (let ((estado-no (funcall operador estado)))
+   (t (let ((estado-no (funcall operador estado jogador)))
         (cond
          ((equal estado-no nil) nil)
          (t estado-no))))
@@ -246,14 +246,14 @@
 )
 
 
-(defun sucessores (estado operadores)
-  (let ((sucessor (novo-sucessor estado (car operadores))))
+(defun sucessores (estado operadores jogador)
+  (let ((sucessor (novo-sucessor estado (car operadores) jogador)))
    (cond
      ((null operadores) nil)
 
      ((equal sucessor nil) (sucessores estado (rest operadores)))
 
-     (t (cons (novo-sucessor estado (car operadores)) (sucessores estado (rest operadores))))
+     (t (cons (novo-sucessor estado (car operadores) jogador) (sucessores estado (rest operadores))))
     )
    )
 )
@@ -438,6 +438,7 @@
 
 
 
+
 (defun jogada-humano (tabuleiro jogador)
 
 ; NOTA: escrever o tabuleiro antes 
@@ -448,10 +449,10 @@
         (linha (floor numero 10))
         (coluna (mod numero 10)))
     (cond
-     ((and (equal jogador 'jogador1) (movimento-válido linha coluna)) (let ((jogada_aux (alterar-jogada (colocar-peca linha coluna tabuleiro -1)))) ; atualiza a variável *jogada*
+     ((and (equal jogador 'jogador1) (movimento-válido linha coluna tabuleiro)) (let ((jogada_aux (alterar-jogada (colocar-peca linha coluna tabuleiro -1)))) ; atualiza a variável *jogada*
                                                                         (jogada-computador (obter-jogada) 'jogador2) ; manda o tabuleiro ao adversário
                                                                         ))
-     ((and (equal jogador 'jogador2) (movimento-válido linha coluna)) (let ((jogada_aux2 (alterar-jogada (colocar-peca linha coluna tabuleiro -2)))) ; atualiza a variável *jogada*
+     ((and (equal jogador 'jogador2) (movimento-válido linha coluna tabuleiro)) (let ((jogada_aux2 (alterar-jogada (colocar-peca linha coluna tabuleiro -2)))) ; atualiza a variável *jogada*
                                                                         (jogada-computador (obter-jogada) 'jogador1) ; manda o tabuleiro ao adversário
                                                                         ))
      (t nil))
@@ -465,10 +466,10 @@
 
 (defun posicoes-validas (tabuleiro) ; ????????????????? NÃO ESTA A FUNCIONAR
   "Devolve todas as posições válidas para mover o cavalo do utilizador"
-  (sucessores (list tabuleiro 0) (operadores))
+  (sucessores (list tabuleiro 0) (operadores) jogador)
 )
 
-(defun movimento-válido (linha coluna)
+(defun movimento-válido (linha coluna tabuleiro)
   "Verifica se é possível aplicar algum operador de modo a colocar o cavalo na prosição que o utilizador pretende"
 
   (cond

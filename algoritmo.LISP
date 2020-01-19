@@ -24,7 +24,7 @@
 
 
 (defun negamax (estado d jogador &optional (alfa most-negative-fixnum) (beta most-positive-fixnum)) 
-  (let ((sucessores (sucessores estado (operadores) d jogador)))
+  (let ((sucessores (sucessores estado (operadores) jogador)))
     (cond
      ((null sucessores) (* jogador (funcao-avaliacao-nos-folha (second estado) (third estado)))) 
      ((equal d 0) (* jogador (funcao-avaliacao-pseudo-nos-folha (second estado) (third estado)))) 

@@ -26,6 +26,6 @@
 (defun negamax (estado d jogador &optional (alfa most-negative-fixnum) (beta most-positive-fixnum)) 
   (let ((sucessores (sucessores estado (operadores) d jogador)))
     (cond
-     ((or (equal d 0) (null sucessores)) (funcao-avaliacao estado jogador)) ;;acrescentar a multiplicação com a heuristica no projeto (?)
-;;gero o 1o sucessor do no
+     ((null sucessores) (* jogador (funcao-avaliacao-nos-folha (second estado) (third estado)))) 
+     ((equal d 0) (* jogador (funcao-avaliacao-pseudo-nos-folha (second estado) (third estado)))) 
      (t (negamax-sucessores estado (- d 1) (- jogador) sucessores (- alfa) (- beta))))))
