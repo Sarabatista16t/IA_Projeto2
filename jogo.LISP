@@ -267,7 +267,7 @@
 ;;;  OPERADORES DO PROBLEMA
 ;;; ========================
 
-(defun operador-default (estado L C)
+(defun operador-default (estado L C jogador)
   (let* ((tabuleiro (first estado))
         (valor-cavalo (celula (+ (first (posicao-cavalo tabuleiro)) L) (+ (second (posicao-cavalo tabuleiro)) C) tabuleiro)))
     (cond 
@@ -285,36 +285,46 @@
              (tabuleiro-cavalo (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil T))
              )
   (cond
-   ((> (+ (first posicao) L) (length tabuleiro)) nil)
-   ((> (+ (second posicao) C) (length (car tabuleiro))) nil)
-   ((verifica-duplo valor-cavalo) (list (substituir linha-celula-duplo coluna-celula-duplo tabuleiro-cavalo) (+ (second estado) valor-cavalo)))
-   ((or (null linha-celula-simetrico) (null coluna-celula-simetrico)) (list (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil T) (+ (second estado) valor-cavalo)))
-   (t (list (substituir linha-celula-simetrico coluna-celula-simetrico tabuleiro-cavalo) (+ (second estado) valor-cavalo)))))))))
+   ((equal jogador 1) 
+    (cond
+     ((> (+ (first posicao) L) (length tabuleiro)) nil)
+     ((> (+ (second posicao) C) (length (car tabuleiro))) nil)
+     ((verifica-duplo valor-cavalo) (list (substituir linha-celula-duplo coluna-celula-duplo tabuleiro-cavalo) (+ (second estado) valor-cavalo)))
+     ((or (null linha-celula-simetrico) (null coluna-celula-simetrico)) (list (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil T) (+ (second estado) valor-cavalo)))
+     (t (list (substituir linha-celula-simetrico coluna-celula-simetrico tabuleiro-cavalo) (+ (second estado) valor-cavalo)))))
+   ((equal jogador 2) 
+    (cond
+     ((> (+ (first posicao) L) (length tabuleiro)) nil)
+     ((> (+ (second posicao) C) (length (car tabuleiro))) nil)
+     ((verifica-duplo valor-cavalo) (list (substituir linha-celula-duplo coluna-celula-duplo tabuleiro-cavalo) (+ (third estado) valor-cavalo)))
+     ((or (null linha-celula-simetrico) (null coluna-celula-simetrico)) (list (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil T) (+ (third estado) valor-cavalo)))
+     (t (list (substituir linha-celula-simetrico coluna-celula-simetrico tabuleiro-cavalo) (+ (third estado) valor-cavalo)))))
+   (T nil)))))))
 
 
-(defun operador-1 (estado)
-  (operador-default estado 2 (- 1)))
+(defun operador-1 (estado jogador)
+  (operador-default estado 2 (- 1) jogador))
 
-(defun operador-2 (estado)
-  (operador-default estado 2 1))
+(defun operador-2 (estado jogador)
+  (operador-default estado 2 1 jogador))
 
-(defun operador-3 (estado)
-  (operador-default estado 1 2))
+(defun operador-3 (estado jogador)
+  (operador-default estado 1 2 jogador))
 
-(defun operador-4 (estado)
-  (operador-default estado (- 1) 2))
+(defun operador-4 (estado jogador)
+  (operador-default estado (- 1) 2 jogador))
 
-(defun operador-5 (estado)
-  (operador-default estado (- 2) 1))
+(defun operador-5 (estado jogador)
+  (operador-default estado (- 2) 1 jogador))
 
-(defun operador-6 (estado)
-  (operador-default estado (- 2) (- 1)))
+(defun operador-6 (estado jogador)
+  (operador-default estado (- 2) (- 1) jogador))
 
-(defun operador-7 (estado)
-  (operador-default estado (- 1) (- 2)))
+(defun operador-7 (estado jogador)
+  (operador-default estado (- 1) (- 2) jogador))
 
-(defun operador-8 (estado)
-  (operador-default estado 1 (- 2)))
+(defun operador-8 (estado jogador)
+  (operador-default estado 1 (- 2) jogador))
 
 
 (defun percorrer-linha0 (lista estado &optional (c 0))

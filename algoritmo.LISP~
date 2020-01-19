@@ -10,34 +10,22 @@
 ;; =====================================================================
 ;;                         NEGAMAX
 ;; =====================================================================
-;;; argumentos: nó n, profundidade d, cor c
-;;; b = ramificação (número de sucessores)
 
-; function negamax (n, d, c &aux bestValue)
- ;    if d = 0 ou n é terminal
-  ;       return c * valor heuristico de n
-   ;  bestValue := -8
-    ; para cada sucessor de n (n1, ..., nk,..., nb)
-     ;   bestValue := max(bestValue, -negamax(nk, d-1, -c) )
-     ;return bestValue
-
-;;; Valor do nó inicial
-;rootNegamaxValue := negamax( rootNode, d, -1) 
+(defun negamax-sucessores (estado d jogador sucessores alfa beta &optional (bestValue most-negative-fixnum))
+  (cond
+   ((null sucessores) alfa)
+   (t
+    (let* ((valorSucessor (- (negamax (first sucessores) d jogador alfa beta)))
+           (bestSucessor (max bestValue valorSucessor))
+           (newAlfa (max alfa bestSucessor)))
+      (cond
+       ((>= newAlfa beta) bestSucessor)
+       (t (negamax-sucessores estado d  jogador (rest sucessores) newAlfa beta bestSucessor)))))))
 
 
-
-;; NEGAMAX COM CORTES ALFA-BETA
-
-;;; argumentos: nó n, profundidade d, cor c
-;;; b = ramificação (número de sucessores)
-;function negamax (n, d, a, ß, c)
- ;    se d = 0 ou n é terminal
-  ;       return c * valor heuristico de n
-   ;  sucessores := OrderMoves(GenerateMoves(n))
-    ; bestValue := -8
-     ;para cada sucessor nk em sucessores
-      ;   bestValue := max (bestValue, -negamax (nk, d-1, -ß, - a, -c))
-       ;  a := max (a, bestValue)
-        ; se a = ß
-         ;    break
-     ;return bestValue
+(defun negamax (estado d jogador &optional (alfa most-negative-fixnum) (beta most-positive-fixnum)) 
+  (let ((sucessores (sucessores estado (operadores) d jogador)))
+    (cond
+     ((or (equal d 0) (null sucessores)) (funcao-avaliacao estado jogador)) ;;acrescentar a multiplicação com a heuristica no projeto (?)
+;;gero o 1o sucessor do no
+     (t (negamax-sucessores estado (- d 1) (- jogador) sucessores (- alfa) (- beta))))))
