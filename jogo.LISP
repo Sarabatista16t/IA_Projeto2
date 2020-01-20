@@ -137,7 +137,7 @@
 
 (defun verifica-duplo (numero)                                           
   (cond 
- ((or (equal numero nil) (equal numero T)) nil)
+ ((equal numero nil) nil)
  ((< numero 0) nil)
  (t (equal (mod numero 10) (floor numero 10)))))
 
@@ -149,6 +149,8 @@
    (t (cons (car lista) (substituir-posicao  (- indice 1) (cdr lista) valor)))))
 
 
+
+
 ; Função que
 (defun substituir (indiceL indiceC tabuleiro &optional (valor nil))
   (cond 
@@ -157,14 +159,14 @@
 
 
 ; Função que
-(defun posicao-cavalo (tabuleiro &optional (indiceL 0) (indiceC 0))
+(defun posicao-cavalo (tabuleiro jogador &optional (indiceL 0) (indiceC 0))
     (cond
      ((null tabuleiro) nil)
-     ((equal (celula 0 0 tabuleiro) t) (list indiceL indiceC))
+     ((equal (celula 0 0 tabuleiro) jogador) (list indiceL indiceC))
      (t 
       (cond
-       ((null (car tabuleiro)) (posicao-cavalo (cdr tabuleiro) (+ indiceL 1) 0))
-       (t (posicao-cavalo (cons (cdr (car tabuleiro)) (cdr tabuleiro)) indiceL (+ indiceC 1)))))))
+       ((null (car tabuleiro)) (posicao-cavalo (cdr tabuleiro) jogador (+ indiceL 1) 0))
+       (t (posicao-cavalo (cons (cdr (car tabuleiro)) (cdr tabuleiro)) jogador indiceL (+ indiceC 1)))))))
 
 
 
@@ -251,9 +253,9 @@
    (cond
      ((null operadores) nil)
 
-     ((equal sucessor nil) (sucessores estado (rest operadores)))
+     ((equal sucessor nil) (sucessores estado (rest operadores) jogador))
 
-     (t (cons (novo-sucessor estado (car operadores) jogador) (sucessores estado (rest operadores))))
+     (t (cons (novo-sucessor estado (car operadores) jogador) (sucessores estado (rest operadores) jogador)))
     )
    )
 )
@@ -265,12 +267,12 @@
 
 (defun operador-default (estado L C jogador)
   (let* ((tabuleiro (first estado))
-        (valor-cavalo (celula (+ (first (posicao-cavalo tabuleiro)) L) (+ (second (posicao-cavalo tabuleiro)) C) tabuleiro)))
+        (valor-cavalo (celula (+ (first (posicao-cavalo tabuleiro jogador)) L) (+ (second (posicao-cavalo tabuleiro jogador)) C) tabuleiro)))
     (cond 
      ((null valor-cavalo) nil)
      (t 
       (let* (
-             (posicao (posicao-cavalo tabuleiro))
+             (posicao (posicao-cavalo tabuleiro jogador))
              (simetrico (procura-celula valor-cavalo tabuleiro))
              (linha-celula-simetrico (first simetrico))
              (coluna-celula-simetrico (second simetrico))
@@ -278,23 +280,23 @@
              (linha-celula-duplo (first duplo))
              (coluna-celula-duplo (second duplo))
              (tabuleiro-nil (substituir (first posicao) (second posicao) tabuleiro))
-             (tabuleiro-cavalo (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil T))
+             (tabuleiro-cavalo (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil jogador))
              )
   (cond
-   ((equal jogador 1) 
+   ((equal jogador -1) 
     (cond
      ((> (+ (first posicao) L) (length tabuleiro)) nil)
      ((> (+ (second posicao) C) (length (car tabuleiro))) nil)
      ((verifica-duplo valor-cavalo) (list (substituir linha-celula-duplo coluna-celula-duplo tabuleiro-cavalo) (+ (second estado) valor-cavalo)))
-     ((or (null linha-celula-simetrico) (null coluna-celula-simetrico)) (list (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil T) (+ (second estado) valor-cavalo)))
-     (t (list (substituir linha-celula-simetrico coluna-celula-simetrico tabuleiro-cavalo) (+ (second estado) valor-cavalo)))))
-   ((equal jogador 2) 
+     ((or (null linha-celula-simetrico) (null coluna-celula-simetrico)) (list (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil jogador) (+ (second estado) valor-cavalo) (third estado)))
+     (t (list (substituir linha-celula-simetrico coluna-celula-simetrico tabuleiro-cavalo) (+ (second estado) valor-cavalo) (third estado)))))
+   ((equal jogador -2) 
     (cond
      ((> (+ (first posicao) L) (length tabuleiro)) nil)
      ((> (+ (second posicao) C) (length (car tabuleiro))) nil)
      ((verifica-duplo valor-cavalo) (list (substituir linha-celula-duplo coluna-celula-duplo tabuleiro-cavalo) (+ (third estado) valor-cavalo)))
-     ((or (null linha-celula-simetrico) (null coluna-celula-simetrico)) (list (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil T) (+ (third estado) valor-cavalo)))
-     (t (list (substituir linha-celula-simetrico coluna-celula-simetrico tabuleiro-cavalo) (+ (third estado) valor-cavalo)))))
+     ((or (null linha-celula-simetrico) (null coluna-celula-simetrico)) (list (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil jogador) (second estado) (+ (third estado) valor-cavalo)))
+     (t (list (substituir linha-celula-simetrico coluna-celula-simetrico tabuleiro-cavalo) (second estado) (+ (third estado) valor-cavalo)))))
    (T nil)))))))
 
 
@@ -383,10 +385,9 @@
 
 (defun posicionar-jogadores-no-tabuleiro (tabuleiro)
   "Função que cria o nó inicial com o tabuleiro que é lido do ficheiro e aplica as funções para colocar os cavalos no inicio do jogo"
-  (colocar-cavalo-preto (colocar-cavalo-branco tabuleiro)) 
+  (list (colocar-cavalo-preto (colocar-cavalo-branco tabuleiro)) 0 0))
   ; jogador 1  =>  -1  =>   cavalo branco
   ; jogador 2  =>  -2  =>   cavalo preto
-)
 
 
 ;;======================================================================================
@@ -449,18 +450,18 @@
         (linha (floor numero 10))
         (coluna (mod numero 10)))
     (cond
-     ((and (equal jogador 'jogador1) (movimento-válido linha coluna tabuleiro)) (let ((jogada_aux (alterar-jogada (colocar-peca linha coluna tabuleiro -1)))) ; atualiza a variável *jogada*
-                                                                        (jogada-computador (obter-jogada) 'jogador2) ; manda o tabuleiro ao adversário
+     ((and (equal jogador -1) (movimento-válido linha coluna tabuleiro)) (let ((jogada_aux (alterar-jogada (colocar-peca linha coluna tabuleiro -1)))) ; atualiza a variável *jogada*
+                                                                        (jogada-computador (obter-jogada) -2) ; manda o tabuleiro ao adversário
                                                                         ))
-     ((and (equal jogador 'jogador2) (movimento-válido linha coluna tabuleiro)) (let ((jogada_aux2 (alterar-jogada (colocar-peca linha coluna tabuleiro -2)))) ; atualiza a variável *jogada*
-                                                                        (jogada-computador (obter-jogada) 'jogador1) ; manda o tabuleiro ao adversário
+     ((and (equal jogador -2) (movimento-válido linha coluna tabuleiro)) (let ((jogada_aux2 (alterar-jogada (colocar-peca linha coluna tabuleiro -2)))) ; atualiza a variável *jogada*
+                                                                        (jogada-computador (obter-jogada) -1) ; manda o tabuleiro ao adversário
                                                                         ))
      (t nil))
     )
 )
 
 (defun colocar-peca (linha coluna tabuleiro &optional (valor 0))
-  (substituir-posicao linha tabuleiro (substituir-posicao coluna (linha linha tabuleiro) valor))
+  (substituir-posicao linha (substituir-posicao coluna tabuleiro valor) valor)
 )
 
 
@@ -486,12 +487,12 @@
 
   ;(let (()  ; NOTA: calcular a profundidade consoante o tempo
         (cond
-         ((equal jogador 'jogador1) (let ((jogada_aux (alterar-jogada (negamax (obter-jogada) 6 jogador)))) ; atualiza a variável *jogada*
-                                      (jogada-humano (obter-tabuleiro) 'jogador2) ; manda o tabuleiro ao adversário
+         ((equal jogador -1) (let ((jogada_aux (alterar-jogada (negamax (obter-jogada) 6 jogador)))) ; atualiza a variável *jogada*
+                                      (jogada-humano (obter-tabuleiro) -2) ; manda o tabuleiro ao adversário
                                       ))
          
-         ((equal jogador 'jogador2) (let ((jogada_aux2 (alterar-jogada (negamax (obter-jogada) 6 jogador)))) ; atualiza a variável *jogada*
-                                      (jogada-humano (obter-tabuleiro) 'jogador1) ; manda o tabuleiro ao adversário
+         ((equal jogador -2) (let ((jogada_aux2 (alterar-jogada (negamax (obter-jogada) 6 jogador)))) ; atualiza a variável *jogada*
+                                      (jogada-humano (obter-tabuleiro) -1) ; manda o tabuleiro ao adversário
                                       ))
          (t nil)
          )
@@ -505,8 +506,8 @@
 (defun jogar (tabuleiro tempo primeiro-jogador) ; Por default começa o Computador
   ; alternar entre os jogadores
   (cond 
-   ((equal primeiro-jogador 'humano) (jogada-humano tabuleiro 'jogador1))
-   (t (jogada-computador tabuleiro 'jogador1))
+   ((equal primeiro-jogador 'humano) (jogada-humano tabuleiro -1))
+   (t (jogada-computador tabuleiro -1))
    )
 )
 
