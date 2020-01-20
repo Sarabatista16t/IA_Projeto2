@@ -9,10 +9,11 @@
 
 ;; CARREGAR FICHEIROS
 
-;(load "C:\\Users\\Carolina\\Desktop\\Projeto\\puzzle2.LISP")
-;(load "C:\\Users\\Carolina\\Desktop\\Projeto\\procura2.LISP")
-(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
-(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
+(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP") 
+(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
+
+;;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
+;;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
 
 ;;=========================================
 ;;      INPUT E LEITURA DE FICHEIROS  
@@ -23,7 +24,8 @@
   (menu)
   (format t "Introduza o número do problema que pretende testar [1 ao 6]: ~%") ;; ~% -> mudar de linha  
   ; Ler ficheiro
-  (with-open-file (f1 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\problemas.dat" :direction :input) ;; ficheiro f1 -> problemas.dat 
+  (with-open-file (f1 "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\problemas.dat" :direction :input)
+;(f1 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\problemas.dat" :direction :input) ;; ficheiro f1 -> problemas.dat 
     ;;(with-open-file (f2 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output) 
     (jogar (posicionar-jogadores-no-tabuleiro (ler-tabuleiro f1 (read))) 5 'humano)
     )
