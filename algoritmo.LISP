@@ -11,26 +11,34 @@
 ;;                         NEGAMAX
 ;; =====================================================================
 
-(defun negamax-sucessores (estado d jogador sucessores alfa beta &optional (bestValue most-negative-fixnum))
+(defun negamax-sucessores (estado d cor sucessores alfa beta &optional (bestValue most-negative-fixnum))
   (cond
    ((null sucessores) alfa)
    (t
-    (let* ((valorSucessor (- (negamax (first sucessores) d jogador alfa beta)))
+    (let* ((valorSucessor (- (negamax (first sucessores) d cor alfa beta)))
            (bestSucessor (max bestValue valorSucessor))
            (newAlfa (max alfa bestSucessor)))
       (cond
        ((>= newAlfa beta) bestSucessor)
-       (t (negamax-sucessores estado d  jogador (rest sucessores) newAlfa beta bestSucessor)))))))
+       (t (negamax-sucessores estado d cor (rest sucessores) newAlfa beta bestSucessor)))))))
 
 
-(defun negamax (estado d jogador &optional (alfa most-negative-fixnum) (beta most-positive-fixnum)) 
-  (let ((sucessores (sucessores estado (operadores) jogador)))
+(defun negamax (estado d cor &optional (alfa most-negative-fixnum) (beta most-positive-fixnum)) 
+  (let ((sucessores (sucessores estado (operadores))))
     (cond
-     ((null sucessores) (* (cor jogador) (funcao-avaliacao-nos-folha (second estado) (third estado)))) 
-     ((equal d 0) (* (cor jogador) (funcao-avaliacao-pseudo-nos-folha (second estado) (third estado)))) 
-     (t (negamax-sucessores estado (- d 1) (- jogador) sucessores (- alfa) (- beta))))))
+     ((null sucessores) (* cor (funcao-avaliacao-nos-folha (second estado) (third estado)))) 
+     ((equal d 0) (* cor (funcao-avaliacao-pseudo-nos-folha (second estado) (third estado)))) 
+     (t (negamax-sucessores estado (- d 1) (- cor) sucessores (- alfa) (- beta))))))
 
-(defun cor (jogador)
-  (cond
-   ((equal jogador -1) 1)
-   ((equal jogador -2) -1)))
+
+(defun tabuleiro-teste ()
+'(((-1 NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL 05 NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL 03 NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL -2)) 0 0 -1))

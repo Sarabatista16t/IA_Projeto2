@@ -20,7 +20,7 @@
            (newAlfa (max alfa bestSucessor)))
       (cond
        ((>= newAlfa beta) bestSucessor)
-       (t (negamax-sucessores estado d  jogador (rest sucessores) newAlfa beta bestSucessor)))))))
+       (t (negamax-sucessores estado d jogador (rest sucessores) newAlfa beta bestSucessor)))))))
 
 
 (defun negamax (estado d jogador &optional (alfa most-negative-fixnum) (beta most-positive-fixnum)) 
@@ -29,3 +29,16 @@
      ((null sucessores) (* jogador (funcao-avaliacao-nos-folha (second estado) (third estado)))) 
      ((equal d 0) (* jogador (funcao-avaliacao-pseudo-nos-folha (second estado) (third estado)))) 
      (t (negamax-sucessores estado (- d 1) (- jogador) sucessores (- alfa) (- beta))))))
+
+
+(defun tabuleiro-teste ()
+'(((-1 NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL 05 NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL 03 NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+ (NIL NIL NIL NIL NIL NIL NIL NIL NIL -2)) 0 0))

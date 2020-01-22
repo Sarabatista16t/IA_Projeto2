@@ -9,11 +9,11 @@
 
 ;; CARREGAR FICHEIROS
 
-(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP") 
-(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
+;(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP") 
+;(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
 
-;;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
-;;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
+(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
+(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
 
 ;;=========================================
 ;;      INPUT E LEITURA DE FICHEIROS  
@@ -21,80 +21,23 @@
 
 ;;; Inicialização do programa
 (defun iniciar ()
-  (menu)
-  (format t "Introduza o número do problema que pretende testar [1 ao 6]: ~%") ;; ~% -> mudar de linha  
-  ; Ler ficheiro
-  (with-open-file (f1 "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\problemas.dat" :direction :input)
-;(f1 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\problemas.dat" :direction :input) ;; ficheiro f1 -> problemas.dat 
-    ;;(with-open-file (f2 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output) 
-    (jogar (posicionar-jogadores-no-tabuleiro (ler-tabuleiro f1 (read))) 5 'humano)
+  (let ((parametros (menu)))
+    ;(with-open-file (f2 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output) 
+      (jogar (posicionar-jogadores-no-tabuleiro (tabuleiro-aleatorio (baralhar (lista-numeros)) 10)) (first parametros) (second parametros))
+     ; )
     )
-)
+  )
 
-
-;; Função para ler o tabuleiro do ficheiro
-(defun ler-tabuleiro (f1 n)
-  "Devolve uma lista que representa o tabuleiro de jogo"
-  (cond 
-   ((= n 1) (ler-tabuleiro1 f1))
-   ((= n 2) (ler-tabuleiro2 f1))
-   ((= n 3) (ler-tabuleiro3 f1))
-   ((= n 4) (ler-tabuleiro4 f1))
-   ((= n 5) (ler-tabuleiro5 f1))
-   ((= n 6) (tabuleiro-aleatorio (baralhar (lista-numeros)) 10))
-   )
-
-  ;(cond 
-   ; ((= n 1) (read f1))
-    ;((= n 6) (tabuleiro-aleatorio (baralhar (lista-numeros)) 100))
-    ;(t (cons (read f1) (ler-tabuleiro f1 (1- n))))
-  ;)
-)
-
-(defun ler-tabuleiro1 (f1)
-  "Devolve uma lista que representa o tabuleiro de jogo"
-  (read f1)
-)
-
-
-(defun ler-tabuleiro2 (f1)
-  "Devolve uma lista que representa o tabuleiro de jogo"
-  (read f1)
-  (read f1)
-)
-
-(defun ler-tabuleiro3 (f1)
-  "Devolve uma lista que representa o tabuleiro de jogo"
-  (read f1)
-  (read f1)
-  (read f1)
-)
-
-(defun ler-tabuleiro4 (f1)
-  "Devolve uma lista que representa o tabuleiro de jogo"
-  (read f1)
-  (read f1)
-  (read f1)
-  (read f1)
-)
-
-(defun ler-tabuleiro5 (f1)
-  "Devolve uma lista que representa o tabuleiro de jogo"
-  (read f1)
-  (read f1)
-  (read f1)
-  (read f1)
-  (read f1)
-)
 
 
 ;; Função para ler a profundidade
 (defun ler-profundidade()
-"Permite fazer a leitura da profundidade limite para o algoritmo dfs."
-    (progn
+  "Permite fazer a leitura da profundidade limite para o algoritmo dfs."
+  (progn
     (format t "Qual a profundidade limite? ~%")
     (read)
-    ))
+    )
+  )
 
 
 ;;=========================================
@@ -108,33 +51,50 @@
   (format f "   * Sara Batista, numero 170221054~%")
   (format f "   * Carolina Castilho, numero 180221078~%")
   (format f "~%=============================================================================~%~%")
- )
+  )
 
-(defun menu ()
-   (progn
+(defun perguntar-modo-jogo ()
+  "Função que devolve o modo de jogo"
+  (progn
     (escrever-cabecalho t)
     (format t "Selecione o modo de jogo: ~%")
     (format t "1 -> Humano vs Computador ~%")
     (format t "2 -> Computador vs Computador ~%")
-    (let ((resposta (read)))
-      (cond 
-       ((= resposta 1) (humano-computador))
-       (t (computador-computador))
-       )
-      )
-    )
-)
 
-(defun humano-computador ()
+    (read)
+    )
+  )
+
+(defun perguntar-primeiro-jogador()
   (progn
-    (format t "~%Selecione o 1º jogador: ~%")
+    (format t "~%Quem joga primeiro? ~%")
     (format t "1 -> Humano ~%")
     (format t "2 -> Computador ~%")
-    (read) ; incompleto
-    (format t "~%Indique o tempo limite para a jogada do computador: [segundos] ~%")
-    (read) ; 1000 e 5000 milissegundos
+    (read)
     )
-)
+  )
+
+(defun perguntar-tempo ()
+  (format t "~%Indique o tempo limite para a jogada do computador: [milissegundos] ~%")
+  (read) ; 1000 e 5000 milissegundos
+  )
+
+(defun menu ()
+  "Devolve uma lista com os operadores necessários ao jogo: primeiro-jogador, tempo"
+  (let* ((modo-jogo (perguntar-modo-jogo))
+         (tempo (perguntar-tempo)))
+    (cond 
+     ((= modo-jogo 2) (list tempo 'computador))
+     (t (let ((primeiro-jogador (perguntar-primeiro-jogador)))
+          (cond
+           ((= primeiro-jogador 1) (list tempo 'humano))
+           (t (list tempo 'humano))
+           )
+          )
+        )
+     )
+    )
+  )
 
 
 ;;=========================================
