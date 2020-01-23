@@ -4,16 +4,16 @@
 ;;;; interact.lisp
 ;;;; Disciplina de IA - 2019 / 2020
 ;;;; Projeto 2
-;;;; Autores: Sara Batista [nÂº 170221054] e Carolina Castilho [nÂº 180221078]
+;;;; Autores: Sara Batista [nÂº 170221054] e Carolina Castilho [nÂº 180221071]
 
 
 ;; CARREGAR FICHEIROS
 
-;(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP") 
-;(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
+(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP") 
+(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
 
-(load "C:\\Users\\Carolina\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP")
-(load "C:\\Users\\Carolina\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
+;(load "C:\\Users\\Carolina\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP")
+;(load "C:\\Users\\Carolina\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
 
 ;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
 ;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
@@ -52,7 +52,7 @@
   (format f "UC Inteligencia Artificial                               Ano letivo 2019/2020~%~%")
   (format f "Projeto realizado por:~%")
   (format f "   * Sara Batista, numero 170221054~%")
-  (format f "   * Carolina Castilho, numero 180221078~%")
+  (format f "   * Carolina Castilho, numero 180221071~%")
   (format f "~%=============================================================================~%~%")
   )
 
@@ -115,3 +115,4 @@
 
 
 
+-0.021564357

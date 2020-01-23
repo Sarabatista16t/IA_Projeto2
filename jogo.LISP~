@@ -10,7 +10,7 @@
 ;;======================================================================================
 ;;                                 ESTRUTURA DO NÓ 
 ;;======================================================================================        
-;;           ESTADO (TABULEIRO + PONTUAÇÃO_CAVALO_BRANCO + PONTUAÇÃO_CAVALO_PRETO)
+;;           ESTADO (TABULEIRO + PONTUAÇÃO_CAVALO_BRANCO + PONTUAÇÃO_CAVALO_PRETO + JOGADOR)
 ;;           F 
 ;;    NÓ =>  G 
 ;;           H
@@ -66,6 +66,10 @@
 
 (defun no-pontos-cavalo-preto(estado)
   (third estado)
+)
+
+(defun no-jogador(estado)
+  (fourth estado)
 )
 
 (defun no-f(no)
@@ -260,16 +264,13 @@
    )
 )
 
-(defun pre-sucessores (estado operadores)
-  (cond
-   ((equal (fourth estado) -1) (sucessores (list (first estado) (second estado) (third estado) -2) operadores))
-   (t (sucessores (list (first estado) (second estado) (third estado) -1) operadores))
-   )
-)
 
 ;;; ========================
 ;;;  OPERADORES DO PROBLEMA
 ;;; ========================
+
+(defparameter cavalo-branco -1)
+(defparameter cavalo-preto -2)
 
 (defun operador-default (estado L C)
   (cond 
@@ -351,14 +352,15 @@
 ;;                "OPERADOR 0" (posicionar os cavalos no inicio do jogo)
 ;;======================================================================================        
 
-(defun encontrar-maximo-lista (lista &optional (maximo (first lista)))
+(defun encontrar-maximo-lista (lista &optional (maximo 0))
   "Função que devolve o valor máximo da lista"
   (cond
       ((null lista) maximo)
+      ((equal (first lista) nil) (encontrar-maximo-lista (rest lista) maximo))
       ((> (first lista) maximo) (encontrar-maximo-lista (rest lista) (first lista)))
       (t (encontrar-maximo-lista (rest lista) maximo))
+      )
   )
-)
 
 (defun obter-indice-do-valor-maximo (lista &optional (count 0))
   (cond
@@ -368,6 +370,7 @@
   )
 )
 
+; TÊM DE RECEBER O ESTADO, PARA PODER ATUALIZAR AS PONTUAÇÕES NO INICIO
 (defun colocar-cavalo-branco (tabuleiro)
   "Função que coloca o cavalo branco na posição com maior valor da linha 1"
   (substituir 0 (obter-indice-do-valor-maximo (linha 1 tabuleiro)) tabuleiro -1)
