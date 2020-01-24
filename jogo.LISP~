@@ -373,7 +373,7 @@
 
 (defun colocar-cavalo-branco (tabuleiro)
   "Função que coloca o cavalo branco na posição com maior valor da linha 1"
-  (list (substituir 0 (obter-indice-do-valor-maximo (linha 1 tabuleiro)) tabuleiro -1))
+  (list (substituir 0 (obter-indice-do-valor-maximo (linha 0 tabuleiro)) tabuleiro -1))
 )
 
 (defun pontuação-inicial-cavalo-branco (tabuleiro)
@@ -394,8 +394,8 @@
   
   ; jogador 1  =>  -1  =>   cavalo branco
   ; jogador 2  =>  -2  =>   cavalo preto
-
-    (list (colocar-cavalo-preto (colocar-cavalo-branco tabuleiro)) (pontuação-inicial-cavalo-branco tabuleiro) (pontuação-inicial-cavalo-preto tabuleiro) -1)
+ 
+  (list (colocar-cavalo-preto (colocar-cavalo-branco tabuleiro)) (pontuação-inicial-cavalo-branco tabuleiro) (pontuação-inicial-cavalo-preto tabuleiro) -1)
   )
 
 
