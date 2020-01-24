@@ -4,28 +4,28 @@
 ;;;; interact.lisp
 ;;;; Disciplina de IA - 2019 / 2020
 ;;;; Projeto 2
-;;;; Autores: Sara Batista [nÂº 170221054] e Carolina Castilho [nÂº 180221071]
+;;;; Autores: Sara Batista [nÃ‚Âº 170221054] e Carolina Castilho [nÃ‚Âº 180221071]
 
 
 ;; CARREGAR FICHEIROS
 
-;(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP") 
-;(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
+;(load "C:\\Users\\carol\\OneDrive\\3ÂºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP") 
+;(load "C:\\Users\\carol\\OneDrive\\3ÂºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
 
-(load "C:\\Users\\Carolina\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP")
-(load "C:\\Users\\Carolina\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
+(load "C:\\Users\\Carolina\\OneDrive\\3ÂºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP")
+(load "C:\\Users\\Carolina\\OneDrive\\3ÂºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
 
-;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
-;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
+;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5Âº Semestre\\InteligÃªncia Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
+;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5Âº Semestre\\InteligÃªncia Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
 
 ;;=========================================
 ;;      INPUT E LEITURA DE FICHEIROS  
 ;;=========================================
 
-;;; Inicialização do programa
+;;; InicializaÃ§Ã£o do programa
 (defun iniciar ()
   (let ((parametros (menu)))
-    ;(with-open-file (f2 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output) 
+    ;(with-open-file (f2 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5Âº Semestre\\InteligÃªncia Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output) 
       (jogar (posicionar-jogadores-no-tabuleiro (tabuleiro-aleatorio (baralhar (lista-numeros)) 10)) (first parametros) (second parametros))
      ; )
     )
@@ -33,7 +33,8 @@
 
 
 
-;; Função para ler a profundidade
+
+;; FunÃ§Ã£o para ler a profundidade
 (defun ler-profundidade()
   "Permite fazer a leitura da profundidade limite para o algoritmo dfs."
   (progn
@@ -57,7 +58,7 @@
   )
 
 (defun perguntar-modo-jogo ()
-  "Função que devolve o modo de jogo"
+  "FunÃ§Ã£o que devolve o modo de jogo"
   (progn
     (escrever-cabecalho t)
     (format t "Selecione o modo de jogo: ~%")
@@ -83,7 +84,7 @@
   )
 
 (defun menu ()
-  "Devolve uma lista com os operadores necessários ao jogo: primeiro-jogador, tempo"
+  "Devolve uma lista com os operadores necessÃ¡rios ao jogo: primeiro-jogador, tempo"
   (let* ((modo-jogo (perguntar-modo-jogo))
          (tempo (perguntar-tempo)))
     (cond 
@@ -104,13 +105,13 @@
 ;;                OUTPUT  
 ;;=========================================
 
-;; Função para escrever o tabuleiro no final do jogo num ficheiro
+;; FunÃ§Ã£o para escrever o tabuleiro no final do jogo num ficheiro
 (defun escrever-tabuleiro-final-jogo (tabuleiro f2)
   "Escreve no ficheiro a lista que representa o tabuleiro atualizado no final do jogo"
   (format f2 "~A" tabuleiro)
 )
 
-;; Funções para escrever as estatisticas num ficheiro
+;; FunÃ§Ãµes para escrever as estatisticas num ficheiro
 
 
 

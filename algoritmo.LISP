@@ -15,7 +15,7 @@
   (cond
    ((null sucessores) alfa)
    (t
-    (let* ((valorSucessor (- (negamax (first sucessores) d (- cor) (- alfa) (- beta))))
+    (let* ((valorSucessor (- (negamax (first sucessores) d (- cor) (- beta) (- alfa))))
            (bestSucessor (max bestValue valorSucessor))
            (newAlfa (max alfa bestSucessor)))
       (cond
@@ -23,7 +23,7 @@
        (t (negamax-sucessores estado d cor (rest sucessores) newAlfa beta bestSucessor)))))))
 
 
-(defun negamax (estado d cor &optional (alfa most-negative-fixnum) (beta most-positive-fixnum)) 
+(defun negamax (estado d cor &optional (alfa -1) (beta 1)) 
   (let ((sucessores (sucessores estado (operadores))))
     (cond
      ((null sucessores) (* cor (funcao-avaliacao-nos-folha (second estado) (third estado)))) 

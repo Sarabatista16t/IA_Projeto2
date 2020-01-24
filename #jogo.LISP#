@@ -1,26 +1,26 @@
 ;; ===============================================================================================================================
-;; ========================================= C”DIGO REFERENTE AO JOGO DO CAVALO ================================================== 
+;; ========================================= C√ìDIGO REFERENTE AO JOGO DO CAVALO ================================================== 
 ;; ===============================================================================================================================
 ;;;; jogo.lisp
 ;;;; Disciplina de IA - 2019 / 2020
 ;;;; Projeto 2
-;;;; Autores: Sara Batista [n∫ 170221054] e Carolina Castilho [n∫ 180221071]
+;;;; Autores: Sara Batista [n¬∫ 170221054] e Carolina Castilho [n¬∫ 180221071]
 
 
 ;;======================================================================================
-;;                                 ESTRUTURA DO N” 
+;;                                 ESTRUTURA DO N√ì 
 ;;======================================================================================        
-;;           ESTADO (TABULEIRO + PONTUA«√O_CAVALO_BRANCO + PONTUA«√O_CAVALO_PRETO + JOGADOR)
+;;           ESTADO (TABULEIRO + PONTUA√á√ÉO_CAVALO_BRANCO + PONTUA√á√ÉO_CAVALO_PRETO + JOGADOR)
 ;;           F 
-;;    N” =>  G 
+;;    N√ì =>  G 
 ;;           H
-;;           N”-PAI
+;;           N√ì-PAI
 
 
 
 
 ;;; ======================
-;;;    FUN«√O DE TESTE
+;;;    FUN√á√ÉO DE TESTE
 ;;; ======================
 
 (defun no-teste (tabuleiro)
@@ -44,12 +44,12 @@
 
 
 ;;; ========================================================
-;;;                    M…TODOS SELETORES
+;;;                    M√âTODOS SELETORES
 ;;; ========================================================
 
 
 ;;; ======================
-;;;   Vocabul·rio LISP 
+;;;   Vocabul√°rio LISP 
 ;;; ======================
 
 (defun no-estado(no)
@@ -90,14 +90,14 @@
 
 
 ;;; ===============================================
-;;;    FUN«’ES AUXILIARES DA PROCURA
+;;;    FUN√á√ïES AUXILIARES DA PROCURA
 ;;; ===============================================
 
 ;;; ===========================
-;;;    PosiÁıes no tabuleiro
+;;;    Posi√ß√µes no tabuleiro
 ;;; ===========================
 
-; FunÁ„o que devolve a linha correspondente a um determinado indice
+; Fun√ß√£o que devolve a linha correspondente a um determinado indice
 (defun linha (indice tabuleiro)
 "Retorna uma lista que representa a linha no tabuleiro recebido"  
   (cond 
@@ -105,7 +105,7 @@
    (T (linha (- indice 1)  (cdr tabuleiro)))))
 
 
-; FunÁ„o que devolve a celula correspondente a um determinado indice de linha e coluna
+; Fun√ß√£o que devolve a celula correspondente a um determinado indice de linha e coluna
 (defun celula (n x tabuleiro)
 "Retorna o valor presente na celula no tabuleiro, representada pelos dois indices"
 (cond
@@ -114,7 +114,7 @@
  (t (nth x (nth n tabuleiro)))))
 
 
-; FunÁ„o que 
+; Fun√ß√£o que 
 (defun procura-celula (valor tabuleiro &optional (indiceL 0) (indiceC 0))
   (cond
    ((null tabuleiro) nil)
@@ -146,7 +146,7 @@
  (t (equal (mod numero 10) (floor numero 10)))))
 
 
-; FunÁ„o que
+; Fun√ß√£o que
 (defun substituir-posicao (indice lista &optional (valor nil))
   (cond
    ((equal indice 0) (cons valor (rest lista)))
@@ -155,14 +155,14 @@
 
 
 
-; FunÁ„o que
+; Fun√ß√£o que
 (defun substituir (indiceL indiceC tabuleiro &optional (valor nil))
   (cond 
    ((equal indiceL 0) (cons (substituir-posicao indiceC (car tabuleiro) valor) (rest tabuleiro)))
    (t (cons (car tabuleiro) (substituir (- indiceL 1) indiceC (rest tabuleiro) valor)))))
 
 
-; FunÁ„o que
+; Fun√ß√£o que
 (defun posicao-cavalo (tabuleiro jogador &optional (indiceL 0) (indiceC 0))
     (cond
      ((null tabuleiro) nil)
@@ -175,18 +175,18 @@
 
 
 ;;; =====================================
-;;;     Gerar um tabuleiro aleatÛrio
+;;;     Gerar um tabuleiro aleat√≥rio
 ;;; =====================================
 
-;; Lista dos n˙meros do tabuleiro
+;; Lista dos n√∫meros do tabuleiro
 (defun lista-numeros (&optional (n 100))
-"cria uma lista com todos os n√∫meros entre 0 (inclusive) e n (exclusive)"
+"cria uma lista com todos os n√É¬∫meros entre 0 (inclusive) e n (exclusive)"
   (cond
    ((equal n 1) (list 0))
    (T (cons (- n 1) (lista-numeros (- n 1))))))
 
 
-;; Remover um valor que j· exista no tabuleiro
+;; Remover um valor que j√° exista no tabuleiro
 (defun remover-se (pred lista)
   (cond 
    ((null lista) nil)
@@ -202,7 +202,7 @@
               (cons numero-aleatorio (baralhar(remover-se  (lambda (x) (= x numero-aleatorio))  lista)))))))
 
 
-;; FunÁ„o que gera um tabuleiro aleatÛrio
+;; Fun√ß√£o que gera um tabuleiro aleat√≥rio
 (defun tabuleiro-aleatorio (lista n)  
   (cond    
    ((null lista) nil)    
@@ -211,7 +211,7 @@
 
 
 ;;; ======================
-;;;     FunÁıes soluÁ„o
+;;;     Fun√ß√µes solu√ß√£o
 ;;; ======================
 
 
@@ -238,7 +238,7 @@
 )
 
 ;;; =========================
-;;;     FunÁıes sucessores
+;;;     Fun√ß√µes sucessores
 ;;; =========================
 
 (defun novo-sucessor (estado operador)
@@ -360,7 +360,7 @@
 ;;======================================================================================        
 
 (defun encontrar-maximo-lista (lista &optional (maximo 0))
-  "FunÁ„o que devolve o valor m·ximo da lista"
+  "Fun√ß√£o que devolve o valor m√°ximo da lista"
   (cond
       ((null lista) maximo)
       ((equal (first lista) nil) (encontrar-maximo-lista (rest lista) maximo))
@@ -377,20 +377,20 @@
   )
 )
 
-; T M DE RECEBER O ESTADO, PARA PODER ATUALIZAR AS PONTUA«’ES NO INICIO
+; T√äM DE RECEBER O ESTADO, PARA PODER ATUALIZAR AS PONTUA√á√ïES NO INICIO
 (defun colocar-cavalo-branco (tabuleiro)
-  "FunÁ„o que coloca o cavalo branco na posiÁ„o com maior valor da linha 1"
-  (list (substituir 0 (obter-indice-do-valor-maximo (linha 1 tabuleiro)) tabuleiro -1) (celula 0 (obter-indice-do-valor-maximo (linha 0 tabuleiro)) tabuleiro))
+  "Fun√ß√£o que coloca o cavalo branco na posi√ß√£o com maior valor da linha 1"
+  (list (substituir 0 (obter-indice-do-valor-maximo (linha 0 tabuleiro)) tabuleiro -1) (celula 0 (obter-indice-do-valor-maximo (linha 0 tabuleiro)) tabuleiro))
 )
 
 (defun colocar-cavalo-preto (tabuleiro)
-  "FunÁ„o que coloca o cavalo preto na posiÁ„o com maior valor da linha 10"
+  "Fun√ß√£o que coloca o cavalo preto na posi√ß√£o com maior valor da linha 10"
   (list (substituir 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro -2) (celula 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro))
 )
 
 
 (defun posicionar-jogadores-no-tabuleiro (tabuleiro)
-  "FunÁ„o que cria o nÛ inicial com o tabuleiro que È lido do ficheiro e aplica as funÁıes para colocar os cavalos no inicio do jogo"
+  "Fun√ß√£o que cria o n√≥ inicial com o tabuleiro que √© lido do ficheiro e aplica as fun√ß√µes para colocar os cavalos no inicio do jogo"
   
   ; jogador 1  =>  -1  =>   cavalo branco
   ; jogador 2  =>  -2  =>   cavalo preto
@@ -411,7 +411,7 @@
 ; Constantes
 
 (let ((*jogada* nil) ; <estado> <valor negamax>
-      (*profundidade* 5)) ; tempo m·ximo para o computador jogar (milisegundos)
+      (*profundidade* 5)) ; tempo m√°ximo para o computador jogar (milisegundos)
 
  ; *jogada*
 
@@ -441,17 +441,17 @@
 
   (escrever-estado t estado)
   (posicoes-validas estado)
-  (format t "~%~%Introduza a linha e a coluna onde pretende colocar a peÁa: ~%")
+  (format t "~%~%Introduza a linha e a coluna onde pretende colocar a pe√ßa: ~%")
   (format t "<letra> <numero de 1 a 10> ~%")
   (let* ((numero (read))
          (linha (floor numero 10))
          (coluna (mod numero 10)))
     (cond
-     ((and (equal jogador -1) (movimento-v·lido linha coluna tabuleiro)) (let ((jogada_aux1 (colocar-peca linha coluna estado)))
-                                                                           (jogada-computador jogada_aux1 -2) ; manda a jogada ao advers·rio
+     ((and (equal jogador -1) (movimento-v√°lido linha coluna tabuleiro)) (let ((jogada_aux1 (colocar-peca linha coluna estado)))
+                                                                           (jogada-computador jogada_aux1 -2) ; manda a jogada ao advers√°rio
                                                                            ))
-     ((and (equal jogador -2) (movimento-v·lido linha coluna tabuleiro)) (let ((jogada_aux2 (colocar-peca linha coluna estado)))
-                                                                           (jogada-computador jogada_aux2 -1) ; manda a jogada ao advers·rio
+     ((and (equal jogador -2) (movimento-v√°lido linha coluna tabuleiro)) (let ((jogada_aux2 (colocar-peca linha coluna estado)))
+                                                                           (jogada-computador jogada_aux2 -1) ; manda a jogada ao advers√°rio
                                                                            ))
      (t nil)
      )
@@ -460,7 +460,7 @@
 
 
   (defun colocar-peca (linha coluna estado) 
-    "mover a peÁa, alterar as pontuaÁoes"
+    "mover a pe√ßa, alterar as pontua√ßoes"
     (cond 
      ((equal (no-jogador estado) -1) (list (substituir-posicao linha (substituir-posicao coluna (no-tabuleiro estado) (no-jogador estado)) (no-jogador estado)) (celula linha coluna (no-tabuleiro estado)) (no-pontos-cavalo-preto estado) (no-jogador estado)))
       (t (list (substituir-posicao linha (substituir-posicao coluna (no-tabuleiro estado) (no-jogador estado)) (no-jogador estado)) (no-pontos-cavalo-branco estado) (celula linha coluna (no-tabuleiro estado)) (no-jogador estado)))
@@ -469,11 +469,11 @@
     
 
   (defun posicoes-validas (estado) 
-    "Devolve todas as posiÁıes v·lidas para mover o cavalo do utilizador"
+    "Devolve todas as posi√ß√µes v√°lidas para mover o cavalo do utilizador"
     (let ((possiveis-sucessores (sucessores estado (operadores))))
       (cond
-       ((null possiveis-sucessores) (format  t "~%Ups... N„o h· jogadas possÌveis...:("))
-       (t (format t "Jogadas possÌveis: ~A" (obter-posicoes-validas possiveis-sucessores)))
+       ((null possiveis-sucessores) (format  t "~%Ups... N√£o h√° jogadas poss√≠veis...:("))
+       (t (format t "Jogadas poss√≠veis: ~A" (obter-posicoes-validas possiveis-sucessores)))
        )
       )
     )
@@ -486,12 +486,12 @@
     )
 
 
-(defun movimento-v·lido (linha coluna tabuleiro)
-  "Verifica se È possÌvel aplicar algum operador de modo a colocar o cavalo na prosiÁ„o que o utilizador pretende"
+(defun movimento-v√°lido (linha coluna tabuleiro)
+  "Verifica se √© poss√≠vel aplicar algum operador de modo a colocar o cavalo na prosi√ß√£o que o utilizador pretende"
 
   (cond
-   ((and (< coluna (length (car tabuleiro))) (< linha (length tabuleiro))) t) ; verifica se est· dentro dos limites do tabuleiro
-   ;() ; verifica se pudemos aplicar algum operador que dÍ aquela casa do tabuleiro
+   ((and (< coluna (length (car tabuleiro))) (< linha (length tabuleiro))) t) ; verifica se est√° dentro dos limites do tabuleiro
+   ;() ; verifica se pudemos aplicar algum operador que d√™ aquela casa do tabuleiro
    (t nil)
    )
   )
@@ -502,11 +502,11 @@
 
 
 (defun escrever-pontuacao-cavalo-branco (f pontos)
-  (format f "~%PontuaÁ„o cavalo branco: " pontos)
+  (format f "~%Pontua√ß√£o cavalo branco: " pontos)
   )
 
 (defun escrever-pontuacao-cavalo-preto (f pontos)
-  (format f "~%PontuaÁ„o cavalo preto: " pontos)
+  (format f "~%Pontua√ß√£o cavalo preto: " pontos)
   )
 
 (defun escrever-estado (f estado)
@@ -525,11 +525,11 @@
 (defun jogada-computador (estado jogador)
   (cond
    ((equal jogador -1) (let ((jogada_aux (negamax estado (obter-profundidade) 1))) 
-                         (jogada-humano jogada_aux -2) ; manda a jogada ao advers·rio
+                         (jogada-humano jogada_aux -2) ; manda a jogada ao advers√°rio
                          ))
          
    ((equal jogador -2) (let ((jogada_aux2 (negamax estado (obter-profundidade) 1)))
-                         (jogada-humano jogada_aux2 -1) ; manda a jogada ao advers·rio
+                         (jogada-humano jogada_aux2 -1) ; manda a jogada ao advers√°rio
                          ))
    (t nil)
    )
@@ -537,7 +537,7 @@
 
 
 
-(defun jogar (estado tempo primeiro-jogador) ; Por default comeÁa o Computador
+(defun jogar (estado tempo primeiro-jogador) ; Por default come√ßa o Computador
   ; alternar entre os jogadores
   (cond 
    ((equal primeiro-jogador 'humano) (jogada-humano estado -1))
@@ -545,7 +545,7 @@
    )
   )
 
-(defun funcao-avaliacao-nos-folha (pontos-jogador1 pontos-jogador2) ; (jogada => estado (tabuleiro + pontuaÁ„o) + )
+(defun funcao-avaliacao-nos-folha (pontos-jogador1 pontos-jogador2) ; (jogada => estado (tabuleiro + pontua√ß√£o) + )
   (cond
    ((> pontos-jogador1 pontos-jogador2) 1) ; ganha jogador 1 / perde jogador 2
    ((equal pontos-jogador1 pontos-jogador2) 0) ; empate

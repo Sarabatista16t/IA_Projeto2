@@ -4,7 +4,7 @@
 ;;;; jogo.lisp
 ;;;; Disciplina de IA - 2019 / 2020
 ;;;; Projeto 2
-;;;; Autores: Sara Batista [nº 170221054] e Carolina Castilho [nº 180221078]
+;;;; Autores: Sara Batista [nº 170221054] e Carolina Castilho [nº 180221071]
 
 
 ;;======================================================================================
@@ -272,26 +272,33 @@
 (defparameter cavalo-branco -1)
 (defparameter cavalo-preto -2)
 
+(defun jogador-oposto (jogador)
+  (cond
+   ((equal jogador -2) -1)
+   ((equal jogador -1) -2)))
+
 (defun operador-default (estado L C)
   (cond 
    ((and (equal (+ (first (posicao-cavalo (first estado) (fourth estado))) L) nil) (equal (+ (second (posicao-cavalo (first estado) (fourth estado))) C) nil)) nil)
-    
+
    (t
     (let* ((tabuleiro (first estado))
            (valor-cavalo (celula (+ (first (posicao-cavalo tabuleiro (fourth estado))) L) (+ (second (posicao-cavalo tabuleiro (fourth estado))) C) tabuleiro)))
       (cond 
-       ((equal valor-cavalo nil) nil)
+       ((null valor-cavalo) nil)
+       ((equal valor-cavalo (jogador-oposto (fourth estado))) nil)
        (t 
         (let* (
                (posicao (posicao-cavalo tabuleiro (fourth estado)))
                (simetrico (procura-celula valor-cavalo tabuleiro))
                (linha-celula-simetrico (first simetrico))
                (coluna-celula-simetrico (second simetrico))
-               (duplo (procura-duplo tabuleiro))
+               (tabuleiro-nil (substituir (first posicao) (second posicao) tabuleiro))
+               (tabuleiro-cavalo (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil (fourth estado)))
+               (duplo (procura-duplo tabuleiro-cavalo))
                (linha-celula-duplo (first duplo))
                (coluna-celula-duplo (second duplo))
                (tabuleiro-nil (substituir (first posicao) (second posicao) tabuleiro))
-               (tabuleiro-cavalo (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil (fourth estado)))
                )
           (cond
            ((equal (fourth estado) -1)
