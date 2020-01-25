@@ -373,7 +373,7 @@
 
 (defun colocar-cavalo-branco (tabuleiro)
   "Função que coloca o cavalo branco na posição com maior valor da linha 1"
-  (list (substituir 0 (obter-indice-do-valor-maximo (linha 0 tabuleiro)) tabuleiro -1))
+  (substituir 0 (obter-indice-do-valor-maximo (linha 0 tabuleiro)) tabuleiro -1)
 )
 
 (defun pontuação-inicial-cavalo-branco (tabuleiro)
@@ -382,20 +382,20 @@
 
 (defun colocar-cavalo-preto (tabuleiro)
   "Função que coloca o cavalo preto na posição com maior valor da linha 10"
-  (list (substituir 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro -2))
+  (substituir 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro -2)
 )
 
 (defun pontuação-inicial-cavalo-preto (tabuleiro)
   (celula 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro)
 )
 
-(defun posicionar-jogadores-no-tabuleiro (tabuleiro)
+(defun posicionar-jogadores-no-tabuleiro (tabuleiro jogador)
   "Função que cria o nó inicial com o tabuleiro que é lido do ficheiro e aplica as funções para colocar os cavalos no inicio do jogo"
   
   ; jogador 1  =>  -1  =>   cavalo branco
   ; jogador 2  =>  -2  =>   cavalo preto
  
-  (list (colocar-cavalo-preto (colocar-cavalo-branco tabuleiro)) (pontuação-inicial-cavalo-branco tabuleiro) (pontuação-inicial-cavalo-preto tabuleiro) -1)
+  (list (colocar-cavalo-preto (colocar-cavalo-branco tabuleiro)) (pontuação-inicial-cavalo-branco tabuleiro) (pontuação-inicial-cavalo-preto tabuleiro) jogador)
   )
 
 
@@ -433,7 +433,7 @@
   (calcular-profundidade tempo) ; Calcula a profundidade máxima com base no tempo limite para a jogada do computador
   (cond 
      ; alternar entre os jogadores
-   ((equal primeiro-jogador 'humano) (jogada-humano estado -1))
+   ((equal primeiro-jogador -1) (jogada-humano estado -1))
    (t (jogada-computador estado -1))
    )
   )
@@ -467,11 +467,12 @@
 
 (defun colocar-peca (linha coluna estado) 
     "mover a peça, alterar as pontuaçoes"
-    (cond 
-     ((equal (no-jogador estado) -1) (list (substituir-posicao linha (substituir-posicao coluna (no-tabuleiro estado) (no-jogador estado)) (no-jogador estado)) (celula linha coluna (no-tabuleiro estado)) (no-pontos-cavalo-preto estado) (no-jogador estado)))
-      (t (list (substituir-posicao linha (substituir-posicao coluna (no-tabuleiro estado) (no-jogador estado)) (no-jogador estado)) (no-pontos-cavalo-branco estado) (celula linha coluna (no-tabuleiro estado)) (no-jogador estado)))
-      )
-     )
+    (let* ((posicao-atual (posicao-cavalo (no-tabuleiro estado) (no-jogador estado)))
+           (linha-atual (first posicao-atual))
+           (coluna-atual (second posicao-atual))
+           (indiceL (- linha linha-atual))
+           (indiceC (- coluna coluna-atual)))
+      (operador-default estado indiceL indiceC)))
     
 
 (defun posicoes-validas (estado) 
@@ -488,7 +489,7 @@
   "Devolve uma lista com os indices das posições possíveis"
   (cond
    ((null possiveis-sucessores) nil)
-   (t (cons (posicao-cavalo (no-tabuleiro (first possiveis-sucessores)) (no-jogador (first possiveis-sucessores))) (obter-posicoes-validas (rest possiveis-sucessores))))
+   (t (cons (posicao-cavalo (no-tabuleiro (first possiveis-sucessores)) (jogador-oposto (no-jogador (first possiveis-sucessores)))) (obter-posicoes-validas (rest possiveis-sucessores))))
    )
   )
 
