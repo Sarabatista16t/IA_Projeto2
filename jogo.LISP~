@@ -347,7 +347,7 @@
 
 (defun colocar-cavalo-branco (tabuleiro)
   "Função que devolve o tabuleiro com o cavalo branco na posição com maior valor da linha 1"
-  (substituir 0 (obter-indice-do-valor-maximo (linha 0 tabuleiro)) tabuleiro cavalo-branco)
+  (substituir 0 (obter-indice-do-valor-maximo (linha 0 tabuleiro)) tabuleiro *Jogador1*)
 )
 
 (defun pontuação-inicial-cavalo-branco (tabuleiro)
@@ -357,7 +357,7 @@
 
 (defun colocar-cavalo-preto (tabuleiro)
   "Função que devolve o tabuleiro com o cavalo preto na posição com maior valor da linha 10"
-  (substituir 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro cavalo-preto)
+  (substituir 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro *Jogador2*)
 )
 
 (defun pontuação-inicial-cavalo-preto (tabuleiro)

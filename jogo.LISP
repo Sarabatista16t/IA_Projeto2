@@ -594,9 +594,17 @@
 
 
 (defun escrever-tabuleiro (f tabuleiro)
-  (format f "~%Tabuleiro: ~%~A" tabuleiro)
+  ;(format f "~%Tabuleiro: ~%")
+  (cond
+   ((null tabuleiro) nil)
+   (t (cons (escrever-linha-tabuleiro f (first tabuleiro)) (escrever-tabuleiro f (rest tabuleiro))))
+   )
   )
 
+
+(defun escrever-linha-tabuleiro (f linha)
+  (format f "~%~A" linha)
+  )
 
 (defun escrever-pontuacao-cavalo-branco (f pontos)
   (format f "~%Pontuação cavalo branco: ~%~A" pontos)
