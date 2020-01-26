@@ -26,7 +26,7 @@
 (defun iniciar ()
   (let ((parametros (menu)))
     ;(with-open-file (f2 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output) 
-      (jogar (posicionar-jogadores-no-tabuleiro (tabuleiro-aleatorio (baralhar (lista-numeros)) 10) (second parametros)) (first parametros) (second parametros))
+      (jogar (list (posicionar-jogadores-no-tabuleiro (tabuleiro-aleatorio (baralhar (lista-numeros)) 10) (second parametros)) 0) (first parametros) (second parametros))
      ; )
     )
   )

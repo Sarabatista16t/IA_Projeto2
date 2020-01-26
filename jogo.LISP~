@@ -10,14 +10,18 @@
 ;;======================================================================================
 ;;                                 ESTRUTURA DO NÓ 
 ;;======================================================================================        
-;;           ESTADO (TABULEIRO + PONTUAÇÃO_CAVALO_BRANCO + PONTUAÇÃO_CAVALO_PRETO + JOGADOR + profundidade)
-;;           F 
-;;    NÓ =>  G 
-;;           H
-;;           NÓ-PAI
+;;          ESTADO (TABULEIRO + PONTUAÇÃO_CAVALO_BRANCO + PONTUAÇÃO_CAVALO_PRETO + JOGADOR)
+;;    NÓ =>  
+;;          PROFUNDIDADE
+;;           
 
 
 
+;;; ======================
+;;;    CONSTANTES
+;;; ======================
+(defparameter *Jogador1* -1)  ; Cavalo branco
+(defparameter *Jogador2* -2)  ; Cavalo preto
 
 
 ;;; ======================
@@ -26,11 +30,6 @@
 (defun cria-no (estado &optional (g 0))
   (list estado g)
 )
-
-(defun operadores ()
- "Cria uma lista com todos os operadores do problema"
- (list 'operador-1 'operador-2 'operador-3 'operador-4 'operador-5 'operador-6 'operador-7 'operador-8))
-
 
 
 ;;; ========================================================
@@ -62,23 +61,20 @@
   (fourth estado)
 )
 
-(defun no-g(no)
+(defun no-profundidade(no)
   (second no)
 )
 
 
 
-
-
 ;;; ===============================================
-;;;    FUNÇÕES AUXILIARES DA PROCURA
+;;;       FUNÇÕES AUXILIARES DA PROCURA
 ;;; ===============================================
 
 ;;; ===========================
 ;;;    Posições no tabuleiro
 ;;; ===========================
 
-; Função que devolve a linha correspondente a um determinado indice
 (defun linha (indice tabuleiro)
 "Retorna uma lista que representa a linha no tabuleiro recebido"  
   (cond 
@@ -86,7 +82,6 @@
    (T (linha (- indice 1)  (cdr tabuleiro)))))
 
 
-; Função que devolve a celula correspondente a um determinado indice de linha e coluna
 (defun celula (n x tabuleiro)
 "Retorna o valor presente na celula no tabuleiro, representada pelos dois indices"
 (cond
@@ -95,8 +90,8 @@
  (t (nth x (nth n tabuleiro)))))
 
 
-; Função que 
 (defun procura-celula (valor tabuleiro &optional (indiceL 0) (indiceC 0))
+  "Retorna a celula "
   (cond
    ((null tabuleiro) nil)
    ((equal (celula 0 0 tabuleiro) (+ (* (mod valor 10) 10) (floor valor 10))) (list indiceL indiceC))
@@ -108,6 +103,7 @@
 
 
 (defun procura-duplo (tabuleiro &optional (indiceL 0) (indiceC 0) (indiceL-duplo (- 1)) (indiceC-duplo (- 1)) (duplo (- 1)))
+  "Função que procura o duplo ..."
   (cond
    ((null tabuleiro) (list indiceL-duplo  indiceC-duplo))
    ((null (car tabuleiro)) (procura-duplo (cdr tabuleiro) (+ indiceL 1) 0 indiceL-duplo indiceC-duplo duplo))
@@ -122,36 +118,43 @@
 
 (defun verifica-duplo (numero)                                           
   (cond 
- ((equal numero nil) nil)
- ((< numero 0) nil)
- (t (equal (mod numero 10) (floor numero 10)))))
+   ((equal numero nil) nil)
+   ((< numero 0) nil)
+   (t (equal (mod numero 10) (floor numero 10)))
+   )
+  )
 
 
-; Função que
 (defun substituir-posicao (indice lista &optional (valor nil))
+  "Função auxiliar para substituir uma posição da lista por um dado valor (por default é nil) "
   (cond
    ((equal indice 0) (cons valor (rest lista)))
-   (t (cons (car lista) (substituir-posicao  (- indice 1) (cdr lista) valor)))))
+   (t (cons (car lista) (substituir-posicao  (- indice 1) (cdr lista) valor)))
+   )
+  )
 
 
-
-
-; Função que
 (defun substituir (indiceL indiceC tabuleiro &optional (valor nil))
+  "Função para substituir uma posição do tabuleiro por um valor (por default é nil)"
   (cond 
    ((equal indiceL 0) (cons (substituir-posicao indiceC (car tabuleiro) valor) (rest tabuleiro)))
-   (t (cons (car tabuleiro) (substituir (- indiceL 1) indiceC (rest tabuleiro) valor)))))
+   (t (cons (car tabuleiro) (substituir (- indiceL 1) indiceC (rest tabuleiro) valor)))
+   )
+  )
 
 
-; Função que
 (defun posicao-cavalo (tabuleiro jogador &optional (indiceL 0) (indiceC 0))
+  "Função que devolve a posição do cavalo, dependendo de qual o jogador que está a jogar"
+  (cond
+   ((null tabuleiro) nil)
+   ((equal (celula 0 0 tabuleiro) jogador) (list indiceL indiceC))
+   (t 
     (cond
-     ((null tabuleiro) nil)
-     ((equal (celula 0 0 tabuleiro) jogador) (list indiceL indiceC))
-     (t 
-      (cond
-       ((null (car tabuleiro)) (posicao-cavalo (cdr tabuleiro) jogador (+ indiceL 1) 0))
-       (t (posicao-cavalo (cons (cdr (car tabuleiro)) (cdr tabuleiro)) jogador indiceL (+ indiceC 1)))))))
+     ((null (car tabuleiro)) (posicao-cavalo (cdr tabuleiro) jogador (+ indiceL 1) 0))
+     (t (posicao-cavalo (cons (cdr (car tabuleiro)) (cdr tabuleiro)) jogador indiceL (+ indiceC 1))))
+    )
+   )
+  )
 
 
 
@@ -159,81 +162,64 @@
 ;;;     Gerar um tabuleiro aleatório
 ;;; =====================================
 
-;; Lista dos números do tabuleiro
 (defun lista-numeros (&optional (n 100))
-"cria uma lista com todos os nÃºmeros entre 0 (inclusive) e n (exclusive)"
+  "Cria uma lista com todos os números entre 0 (inclusive) e n (exclusive)"
   (cond
    ((equal n 1) (list 0))
-   (T (cons (- n 1) (lista-numeros (- n 1))))))
+   (T (cons (- n 1) (lista-numeros (- n 1))))
+   )
+  )
 
 
-;; Remover um valor que já exista no tabuleiro
 (defun remover-se (pred lista)
+  "Remove um valor que já exista no tabuleiro"
   (cond 
    ((null lista) nil)
    ((funcall pred (car lista)) (remover-se pred (cdr lista)))
-   (t (cons (car lista) (remover-se pred (cdr lista))))))
+   (t (cons (car lista) (remover-se pred (cdr lista))))
+   )
+  )
 
 
-;; Baralhar a lista
 (defun baralhar (lista)
+  "Baralha a lista"
   (cond
    ((null lista) nil)
    (t (let ((numero-aleatorio  (nth (random (length lista)) lista)))
-              (cons numero-aleatorio (baralhar(remover-se  (lambda (x) (= x numero-aleatorio))  lista)))))))
+              (cons numero-aleatorio (baralhar(remover-se  (lambda (x) (= x numero-aleatorio))  lista)))))
+   )
+  )
 
 
-;; Função que gera um tabuleiro aleatório
-(defun tabuleiro-aleatorio (lista n)  
+(defun tabuleiro-aleatorio (lista n) 
+  "Função que gera um tabuleiro aleatório"
   (cond    
    ((null lista) nil)    
-   (t (cons (subseq lista 0 n) (tabuleiro-aleatorio (subseq lista n) n)))))
-
-
-
-;;; ======================
-;;;     Funções solução
-;;; ======================
-
-
-(defun no-solucaop (no algoritmo)
-  (cond 
-    ((equal (sucessores no (operadores) algoritmo) nil) t)
-    (t nil)))
-
-
-(defun escreve-solucao (sucessores algoritmo)
-  (cond
-   ((null sucessores) nil)
-   ((no-solucaop (first sucessores) algoritmo) (escreve-no (first sucessores) algoritmo))
-   (t (solucao-p (rest sucessores) algoritmo))
- )
-)
-
-(defun escreve-no (no)
- "Permite escrever no ecra um no do problema."
-  (progn
-     ;(format t "| A: ~a | B: ~a | G: ~a |~%" (vasilha-a-conteudo (no-estado no)) (vasilha-b-conteudo (no-estado no)) (no-profundidade no))   
-     (format t " ~a ~%" no)
+   (t (cons (subseq lista 0 n) (tabuleiro-aleatorio (subseq lista n) n)))
+   )
   )
-)
+
+
 
 ;;; =========================
 ;;;     Funções sucessores
 ;;; =========================
 
 (defun novo-sucessor (no operador)
+  "Função auxiliar: aplica um operador e gera o respetivo sucessor"
   (cond 
    ((null operador) nil)
    (t (let ((estado-no (funcall operador (no-estado no))))
         (cond
          ((equal estado-no nil) nil)
-         (t (cria-no estado-no (+ (no-g no) 1)))))
+         (t (cria-no estado-no (+ (no-profundidade no) 1)))))
+      )
    )
-))
+  )
 
 
 (defun sucessores (no operadores)
+  "Função para gerar os sucessores de um nó, aplicando os operadores"
   (let ((sucessor (novo-sucessor no (car operadores))))
    (cond
      ((null operadores) nil)
@@ -241,103 +227,103 @@
      ((equal sucessor nil) (sucessores no (rest operadores)))
 
      (t (cons (novo-sucessor no (car operadores)) (sucessores no (rest operadores))))
-    )
+     )
    )
-)
+  )
 
 
 ;;; ========================
 ;;;  OPERADORES DO PROBLEMA
 ;;; ========================
 
-(defparameter cavalo-branco -1)
-(defparameter cavalo-preto -2)
+(defun operadores ()
+ "Cria uma lista com todos os operadores do problema"
+ (list 'operador-1 'operador-2 'operador-3 'operador-4 'operador-5 'operador-6 'operador-7 'operador-8)
+ )
 
-(defun jogador-oposto (jogador)
-  (cond
-   ((equal jogador -2) -1)
-   ((equal jogador -1) -2)))
+
+(defun operador-1 (estado)
+  (operador-default estado 2 (- 1))
+  )
+
+(defun operador-2 (estado)
+  (operador-default estado 2 1 )
+  )
+
+(defun operador-3 (estado)
+  (operador-default estado 1 2 )
+  )
+
+(defun operador-4 (estado)
+  (operador-default estado (- 1) 2)
+  )
+
+(defun operador-5 (estado)
+  (operador-default estado (- 2) 1 )
+  )
+
+(defun operador-6 (estado)
+  (operador-default estado (- 2) (- 1))
+  )
+
+(defun operador-7 (estado)
+  (operador-default estado (- 1) (- 2))
+  )
+
+(defun operador-8 (estado)
+  (operador-default estado 1 (- 2))
+  )
+
 
 (defun operador-default (estado L C)
+  "Função que aplica os operadores ao estado do nó"
   (cond 
-   ((and (equal (+ (first (posicao-cavalo (first estado) (fourth estado))) L) nil) (equal (+ (second (posicao-cavalo (first estado) (fourth estado))) C) nil)) nil)
+   ((and (equal (+ (first (posicao-cavalo (no-tabuleiro estado) (no-jogador estado))) L) nil) (equal (+ (second (posicao-cavalo (no-tabuleiro estado) (no-jogador estado))) C) nil)) nil)
 
    (t
-    (let* ((tabuleiro (first estado))
-           (valor-cavalo (celula (+ (first (posicao-cavalo tabuleiro (fourth estado))) L) (+ (second (posicao-cavalo tabuleiro (fourth estado))) C) tabuleiro)))
+    (let* ((tabuleiro (no-tabuleiro estado))
+           (valor-cavalo (celula (+ (first (posicao-cavalo tabuleiro (no-jogador estado))) L) (+ (second (posicao-cavalo tabuleiro (no-jogador estado))) C) tabuleiro)))
       (cond 
        ((null valor-cavalo) nil)
-       ((equal valor-cavalo (jogador-oposto (fourth estado))) nil)
+       ((equal valor-cavalo (jogador-oposto (no-jogador estado))) nil)
        (t 
         (let* (
-               (posicao (posicao-cavalo tabuleiro (fourth estado)))
+               (posicao (posicao-cavalo tabuleiro (no-jogador estado)))
                (simetrico (procura-celula valor-cavalo tabuleiro))
                (linha-celula-simetrico (first simetrico))
                (coluna-celula-simetrico (second simetrico))
                (tabuleiro-nil (substituir (first posicao) (second posicao) tabuleiro))
-               (tabuleiro-cavalo (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil (fourth estado)))
+               (tabuleiro-cavalo (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil (no-jogador estado)))
                (duplo (procura-duplo tabuleiro-cavalo))
                (linha-celula-duplo (first duplo))
                (coluna-celula-duplo (second duplo))
                (tabuleiro-nil (substituir (first posicao) (second posicao) tabuleiro))
                )
           (cond
-           ((equal (fourth estado) -1)
+           
+           ((equal (no-jogador estado) *Jogador1*)
             (cond
              ((> (+ (first posicao) L) (length tabuleiro)) nil)
              ((> (+ (second posicao) C) (length (car tabuleiro))) nil)
-             ((verifica-duplo valor-cavalo) (list (substituir linha-celula-duplo coluna-celula-duplo tabuleiro-cavalo) (+ (second estado) valor-cavalo) (third estado) -2))
-             ((or (null linha-celula-simetrico) (null coluna-celula-simetrico)) (list (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil (fourth estado)) (+ (second estado) valor-cavalo) (third estado) -2))
-             (t (list (substituir linha-celula-simetrico coluna-celula-simetrico tabuleiro-cavalo) (+ (second estado) valor-cavalo) (third estado) -2))))
-           ((equal (fourth estado) -2) 
+             ((verifica-duplo valor-cavalo) (list (substituir linha-celula-duplo coluna-celula-duplo tabuleiro-cavalo) (+ (no-pontos-cavalo-branco estado) valor-cavalo) (no-pontos-cavalo-preto estado) *Jogador2*))
+             ((or (null linha-celula-simetrico) (null coluna-celula-simetrico)) (list (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil (no-jogador estado)) (+ (no-pontos-cavalo-branco estado) valor-cavalo) (no-pontos-cavalo-preto estado) *Jogador2*))
+             (t (list (substituir linha-celula-simetrico coluna-celula-simetrico tabuleiro-cavalo) (+ (no-pontos-cavalo-branco estado) valor-cavalo) (no-pontos-cavalo-preto estado) *Jogador2*))))
+           
+           ((equal (no-jogador estado) *Jogador2*) 
             (cond
              ((> (+ (first posicao) L) (length tabuleiro)) nil)
              ((> (+ (second posicao) C) (length (car tabuleiro))) nil)
-             ((verifica-duplo valor-cavalo) (list (substituir linha-celula-duplo coluna-celula-duplo tabuleiro-cavalo) (second estado) (+ (third estado) valor-cavalo) -1))
-             ((or (null linha-celula-simetrico) (null coluna-celula-simetrico)) (list (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil (fourth estado)) (second estado) (+ (third estado) valor-cavalo) -1))
-             (t (list (substituir linha-celula-simetrico coluna-celula-simetrico tabuleiro-cavalo) (second estado) (+ (third estado) valor-cavalo) -1))))
-           (T nil)))))))))
+             ((verifica-duplo valor-cavalo) (list (substituir linha-celula-duplo coluna-celula-duplo tabuleiro-cavalo) (no-pontos-cavalo-branco estado) (+ (no-pontos-cavalo-preto estado) valor-cavalo) *Jogador1*))
+             ((or (null linha-celula-simetrico) (null coluna-celula-simetrico)) (list (substituir (+ (first posicao) L) (+ (second posicao) C) tabuleiro-nil (no-jogador estado)) (no-pontos-cavalo-branco estado) (+ (no-pontos-cavalo-preto estado) valor-cavalo) *Jogador1*))
+             (t (list (substituir linha-celula-simetrico coluna-celula-simetrico tabuleiro-cavalo) (no-pontos-cavalo-branco estado) (+ (no-pontos-cavalo-preto estado) valor-cavalo) *Jogador1*))))
+           (T nil))))))))
+  )
 
 
-(defun operador-1 (estado)
-  (operador-default estado 2 (- 1)))
-
-(defun operador-2 (estado)
-  (operador-default estado 2 1 ))
-
-(defun operador-3 (estado)
-  (operador-default estado 1 2 ))
-
-(defun operador-4 (estado)
-  (operador-default estado (- 1) 2))
-
-(defun operador-5 (estado)
-  (operador-default estado (- 2) 1 ))
-
-(defun operador-6 (estado)
-  (operador-default estado (- 2) (- 1)))
-
-(defun operador-7 (estado)
-  (operador-default estado (- 1) (- 2)))
-
-(defun operador-8 (estado)
-  (operador-default estado 1 (- 2)))
-
-
-(defun percorrer-linha0 (lista estado &optional (c 0))
-  (cond
-   ((null lista) nil)
-   ((numberp (car lista)) (cons (list (substituir 0 c (first estado) T) (+ (second estado) (car lista))) (percorrer-linha0 (cdr lista) estado (+ c 1))))))
-
-
-(defun primeiros-sucessores (lista no-inicial)
-  (cond
-   ((null lista) nil)
-   (t (cons (list (cria-no (car lista) 1 no-inicial)) (primeiros-sucessores (cdr lista) no-inicial)))))
 
 
 ;;======================================================================================
-;;                "OPERADOR 0" (posicionar os cavalos no inicio do jogo)
+;;                "OPERADOR 0" (Posicionar os cavalos no inicio do jogo)
 ;;======================================================================================        
 
 (defun encontrar-maximo-lista (lista &optional (maximo 0))
@@ -351,6 +337,7 @@
   )
 
 (defun obter-indice-do-valor-maximo (lista &optional (count 0))
+  "Função que devolve o indice da coluna onde está o valor máximo"
   (cond
      ((null lista) nil)
      ((equal (first lista) (encontrar-maximo-lista lista)) count)
@@ -358,53 +345,46 @@
   )
 )
 
-
-
-; NOVA ABORDAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEM
-
 (defun colocar-cavalo-branco (tabuleiro)
-  "Função que coloca o cavalo branco na posição com maior valor da linha 1"
-  (substituir 0 (obter-indice-do-valor-maximo (linha 0 tabuleiro)) tabuleiro -1)
+  "Função que devolve o tabuleiro com o cavalo branco na posição com maior valor da linha 1"
+  (substituir 0 (obter-indice-do-valor-maximo (linha 0 tabuleiro)) tabuleiro cavalo-branco)
 )
 
 (defun pontuação-inicial-cavalo-branco (tabuleiro)
+  "Função que devolve a pontuação inicial do cavalo branco (valor da maior casa da 1ª linha)"
   (celula 0 (obter-indice-do-valor-maximo (linha 0 tabuleiro)) tabuleiro)
 )
 
 (defun colocar-cavalo-preto (tabuleiro)
-  "Função que coloca o cavalo preto na posição com maior valor da linha 10"
-  (substituir 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro -2)
+  "Função que devolve o tabuleiro com o cavalo preto na posição com maior valor da linha 10"
+  (substituir 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro cavalo-preto)
 )
 
 (defun pontuação-inicial-cavalo-preto (tabuleiro)
+  "Função que devolve a pontuação inicial do cavalo preto (valor da maior casa da 10ª linha)"
   (celula 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro)
 )
 
 (defun posicionar-jogadores-no-tabuleiro (tabuleiro jogador)
-  "Função que cria o nó inicial com o tabuleiro que é lido do ficheiro e aplica as funções para colocar os cavalos no inicio do jogo"
-  
-  ; jogador 1  =>  -1  =>   cavalo branco
-  ; jogador 2  =>  -2  =>   cavalo preto
- 
+  "Função que cria o nó inicial com o tabuleiro e aplica as funções para colocar os cavalos no inicio do jogo"
   (list (colocar-cavalo-preto (colocar-cavalo-branco tabuleiro)) (pontuação-inicial-cavalo-branco tabuleiro) (pontuação-inicial-cavalo-preto tabuleiro) jogador)
+    ; jogador 1  =>  -1  =>   cavalo branco
+    ; jogador 2  =>  -2  =>   cavalo preto
   )
+
+
 
 
 ;;======================================================================================
 ;;                                 JOGAR 
 ;;======================================================================================        
 
-; Constantes
-
-(let ((*profundidade* 5))) ; tempo máximo para o computador jogar (milisegundos)
-
-
 (defun jogar (no tempo primeiro-jogador) 
   (calcular-profundidade tempo) ; Calcula a profundidade máxima com base no tempo limite para a jogada do computador
   (cond 
      ; alternar entre os jogadores
-   ((equal primeiro-jogador -1) (jogada-humano no -1))
-   (t (jogada-computador no -1))
+   ((equal primeiro-jogador -1) (jogada-humano no *Jogador1*))
+   (t (jogada-computador no *Jogador1*))
    )
   )
 
@@ -415,74 +395,143 @@
 
 
 (defun jogada-humano (no jogador)
-  (escrever-estado t (no-estado no)) ; Escreve o tabuleiro e as pontuações
-  (let* ((posicoes (posicoes-validas no))
-        (estado (no-estado no)))
-    (escreve-posicoes-validas posicoes)
+  (cond
+   ((equal (terminou-jogo no) T) (vencedor no) nil)
+   (t 
+    (escrever-estado t (no-estado no)) ; Escreve o tabuleiro e as pontuações
+    (let* ((posicoes (posicoes-validas no))
+           (estado (no-estado no)))
+      (escreve-posicoes-validas posicoes)
     
-    (cond 
-     ((and (equal jogador -1) (equal posicoes nil)) (jogada-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -2))
-     ((and (equal jogador -2) (equal posicoes nil)) (jogada-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -1))
-     (t 
-      (format t "~%~%Introduza a linha e a coluna onde pretende colocar a peça: ~%")
-      (format t "<letra> <numero de 1 a 10> ~%")
-      (let* ((numero (read))
-             (linha (floor numero 10))
-             (coluna (mod numero 10))
-             )
+      (cond 
+       ((and (equal jogador *Jogador1*) (equal posicoes nil)) (jogada-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador2*))
+       ((and (equal jogador *Jogador2*) (equal posicoes nil)) (jogada-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
+       (t 
+        (format t "~%~%Introduza a linha e a coluna onde pretende colocar a peça: ~%")
+        (format t "<letra> <numero de 1 a 10> ~%")
+        (let* ((numero (read))
+               (linha (floor numero 10))
+               (coluna (mod numero 10))
+               )
          
-        (cond
+          (cond
           
-         ((and (equal jogador -1) (movimento-válido linha coluna (no-tabuleiro estado)) (let ((jogada_aux1 (list (colocar-peca linha coluna estado) 0))) 
-                                                                                          (jogada-computador jogada_aux1 -2) ; manda a jogada ao adversário
-                                                                                          )))
-         ((and (equal jogador -2) (movimento-válido linha coluna (no-tabuleiro estado)) (let ((jogada_aux2 (list (colocar-peca linha coluna estado) 0)))
-                                                                                          (jogada-computador jogada_aux2 -1) ; manda a jogada ao adversário
-                                                                                          )))
-         (t nil)
-         )
+           ((and (equal jogador *Jogador1*) (movimento-válido linha coluna posicoes (no-tabuleiro estado)) (let ((jogada_aux1 (list (colocar-peca linha coluna estado) 0))) 
+                                                                                                             (jogada-computador jogada_aux1 *Jogador2*) ; manda a jogada ao adversário
+                                                                                                             )))
+           ((and (equal jogador *Jogador2*) (movimento-válido linha coluna posicoes (no-tabuleiro estado)) (let ((jogada_aux2 (list (colocar-peca linha coluna estado) 0)))
+                                                                                                             (jogada-computador jogada_aux2 *Jogador1*) ; manda a jogada ao adversário
+                                                                                                             )))
+           (t  (format t "Movimento inválido! Escolha outra posição. ~%") (jogada-humano no jogador))
+           )
+          )
         )
-      ))))
+       )
+      )
+    )
+   )
+  )
+
+
+;;=================================================
+;;     FUNÇÕES AUXILIARES À JOGADA HUMANO
+;;=================================================
+
+(defun jogador-oposto (jogador)
+ "Função para se obter o jogador oposto"
+  (cond
+   ((equal jogador *Jogador2*) *Jogador1*)
+   ((equal jogador *Jogador1*) *Jogador2*)
+   )
+  )
 
 
 (defun colocar-peca (linha coluna estado) 
-    "mover a peça, alterar as pontuaçoes"
-    (let* ((posicao-atual (posicao-cavalo (no-tabuleiro estado) (no-jogador estado)))
-           (linha-atual (first posicao-atual))
-           (coluna-atual (second posicao-atual))
-           (indiceL (- linha linha-atual))
-           (indiceC (- coluna coluna-atual)))
-      (operador-default estado indiceL indiceC)))
+  "Função que move a peça para a casa pretendida e altera a respetiva pontuação"
+  (let* ((posicao-atual (posicao-cavalo (no-tabuleiro estado) (no-jogador estado)))
+         (linha-atual (first posicao-atual))
+         (coluna-atual (second posicao-atual))
+         (indiceL (- linha linha-atual))
+         (indiceC (- coluna coluna-atual)))
+    (operador-default estado indiceL indiceC)
+    )
+  )
     
 
-(defun posicoes-validas (no) 
-  "Devolve todas as posições válidas para mover o cavalo do utilizador"
- (obter-posicoes-validas (sucessores no (operadores))))
+;;============================================
+;;  Funções de verificação do estado do jogo
+;;============================================
 
-(defun escreve-posicoes-validas (posicoes-validas)
-  (cond 
-   ((null posicoes-validas) (format  t "~%Ups... Não há jogadas possíveis...:("))
-   (t (format t "~%Jogadas Possiveis: ~%~A" posicoes-validas))))
+(defun terminou-jogo (no)
+  "Função para verificar se o jogo já terminou"
+  (let* ((estado (no-estado no))
+        (sucessores-um (obter-posicoes-validas (sucessores no (operadores))))
+        (sucessores-dois (obter-posicoes-validas (sucessores (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto (no-jogador estado))) 0) (operadores)))))
+    (cond
+     ((and (null sucessores-um) (null sucessores-dois)) T)
+     (t nil)
+     )
+    )
+  )
+
+
+(defun vencedor (no)
+  "Função para determinar quem é o vencedor"
+  (let ((estado (no-estado no)))
+    (cond
+     ((> (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (format t "Vencedor: Cavalo Branco ~%"))
+     ((< (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (format t "Vencedor: Cavalo Preto ~%"))
+     (t (format t "Empate! ~%"))
+     )
+    )
+  )
+
+
+;;==============================================================
+;;  Funções de validação do movimento do cavalo do utilizador
+;;==============================================================
+
+(defun movimento-válido (linha coluna posicoes-validas tabuleiro)
+  "Verifica se é possível aplicar algum operador de modo a colocar o cavalo na posição que o utilizador pretende"
+  (cond
+   ((or (< coluna 0) (< linha 0) (>= linha (length tabuleiro)) (>= coluna (length (car tabuleiro)))) nil) ; verifica se está dentro dos limites do tabuleiro
+   ((verificar-operador-possivel posicoes-validas linha coluna) t) ; verifica se se podem aplicar operadores
+   (t nil)
+   )
+  )
+
+(defun verificar-operador-possivel (posicoes-validas linha coluna)
+  "Função para verificar se é possível aplicar o operador"
+  (cond
+   ((null posicoes-validas) nil)
+   ((and (equal linha (first (first posicoes-validas))) (equal coluna (second (first posicoes-validas)))) t)
+   (t (verificar-operador-possivel (rest posicoes-validas) linha coluna))))
+
+
+(defun posicoes-validas (no) 
+  "Devolve todas as posições válidas para mover o cavalo"
+  (obter-posicoes-validas (sucessores no (operadores)))
+ )
+
 
 (defun obter-posicoes-validas (possiveis-sucessores)
   "Devolve uma lista com os indices das posições possíveis"
   (let* ((first (first possiveis-sucessores))
          (estado (no-estado first)))
-  (cond
-   ((null possiveis-sucessores) nil)
-   (t (cons (posicao-cavalo (no-tabuleiro estado) (jogador-oposto (no-jogador estado))) (obter-posicoes-validas (rest possiveis-sucessores))))
-   )
-  ))
-
-
-(defun movimento-válido (linha coluna tabuleiro)
-  "Verifica se é possível aplicar algum operador de modo a colocar o cavalo na prosição que o utilizador pretende"
-
-  (cond
-   ((and (< coluna (length (car tabuleiro))) (< linha (length tabuleiro))) t) ; verifica se está dentro dos limites do tabuleiro
-   (t nil)
-   )
+    (cond
+     ((null possiveis-sucessores) nil)
+     (t (cons (posicao-cavalo (no-tabuleiro estado) (jogador-oposto (no-jogador estado))) (obter-posicoes-validas (rest possiveis-sucessores))))
+     )
+    )
   )
+
+
+(defun escreve-posicoes-validas (posicoes-validas)
+  "Escreve a lista com os indices das posições válidas"
+  (cond 
+   ((null posicoes-validas) (format  t "~%Ups... Não há jogadas possíveis...:( ~%"))
+   (t (format t "~%Jogadas Possiveis: ~%~A" posicoes-validas))))
+
 
 
 ;;======================================================================================
@@ -491,26 +540,32 @@
 
 
 (defun jogada-computador (no jogador)
+  (cond
+   ((equal (terminou-jogo no) T) (vencedor no) nil)
+   (t 
   (let ((estado (no-estado no)))
     (cond
-     ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 3 1)))
+     ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 2 1)))
                            (cond 
                             ((null jogada_aux) (jogada-humano (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -2))
                             (t (jogada-humano jogada_aux -2) ; manda a jogada ao adversário
                                ))))
          
-     ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 3 1)))
+     ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 2 1)))
                            (cond 
                             ((null jogada_aux2) (jogada-humano (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -1))
                             (t (jogada-humano jogada_aux2 -1)) ; manda a jogada ao adversário
                             )))
      (t nil)
      )
-    ))
+    ))))
+
 
 (defun calcular-profundidade (tempo)
+  "Função para calcular a profundidade máxima tendo como base o tempo limite"
   ;(alterar-profundidade (/ (* (/ tempo 2) 10) "tempo"))
 )
+
 
 
 ;;======================================================================================
@@ -529,6 +584,7 @@
   ; max pontos = 5050
   (/ (* 0.99 (- pontos-jogador1 pontos-jogador2)) 5050)
   )
+
 
 
 

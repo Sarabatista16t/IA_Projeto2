@@ -27,7 +27,7 @@
    (t
     (let* ((valorSucessor (- (negamax (first sucessores) d (- cor) (- beta) (- alfa))))
            (bestSucessor (max bestValue valorSucessor))
-           (aux (cond ((and (> bestSucessor (second *jogada*)) (equal (no-g (first sucessores)) 1)) (setf *jogada* (list (first sucessores) bestSucessor)))))
+           (aux (cond ((and (> bestSucessor (second *jogada*)) (equal (no-profundidade (first sucessores)) 1)) (setf *jogada* (list (first sucessores) bestSucessor)))))
            (newAlfa (max alfa bestSucessor)))
       (cond
        ((>= newAlfa beta) bestSucessor)

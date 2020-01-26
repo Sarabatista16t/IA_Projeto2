@@ -11,24 +11,36 @@
 ;;                         NEGAMAX
 ;; =====================================================================
 
-(defun negamax-sucessores (estado d cor sucessores alfa beta &optional (bestValue most-negative-fixnum))
+(defvar *jogada* (list nil most-negative-fixnum))
+
+(defun reset-jogada ()
+  (setf *jogada* (list nil most-negative-fixnum)))
+
+(defun negamax-inicial (no d cor)
+  (let* ((reset (reset-jogada))
+        (negamax (negamax no d cor)))
+  (first *jogada*)))
+
+(defun negamax-sucessores (d cor sucessores alfa beta &optional (bestValue most-negative-fixnum))
   (cond
    ((null sucessores) alfa)
    (t
     (let* ((valorSucessor (- (negamax (first sucessores) d (- cor) (- beta) (- alfa))))
            (bestSucessor (max bestValue valorSucessor))
+           (aux (cond ((and (> bestSucessor (second *jogada*)) (equal (no-g (first sucessores)) 1)) (setf *jogada* (list (first sucessores) bestSucessor)))))
            (newAlfa (max alfa bestSucessor)))
       (cond
        ((>= newAlfa beta) bestSucessor)
-       (t (negamax-sucessores estado d cor (rest sucessores) newAlfa beta bestSucessor)))))))
+       (t (negamax-sucessores d cor (rest sucessores) newAlfa beta bestSucessor)))))))
 
 
-(defun negamax (estado d cor &optional (alfa -1) (beta 1)) 
-  (let ((sucessores (sucessores estado (operadores))))
+(defun negamax (no d cor &optional (alfa -1) (beta 1)) 
+  (let* ((sucessores (sucessores no (operadores)))
+        (estado (no-estado no)))
     (cond
      ((null sucessores) (* cor (funcao-avaliacao-nos-folha (second estado) (third estado)))) 
      ((equal d 0) (* cor (funcao-avaliacao-pseudo-nos-folha (second estado) (third estado)))) 
-     (t (negamax-sucessores estado (- d 1) cor sucessores alfa beta)))))
+     (t (negamax-sucessores (- d 1) cor sucessores alfa beta)))))
 
 
 (defun tabuleiro-teste ()
