@@ -10,7 +10,7 @@
 ;;======================================================================================
 ;;                                 ESTRUTURA DO NÓ 
 ;;======================================================================================        
-;;           ESTADO (TABULEIRO + PONTUAÇÃO_CAVALO_BRANCO + PONTUAÇÃO_CAVALO_PRETO + JOGADOR)
+;;           ESTADO (TABULEIRO + PONTUAÇÃO_CAVALO_BRANCO + PONTUAÇÃO_CAVALO_PRETO + JOGADOR + profundidade)
 ;;           F 
 ;;    NÓ =>  G 
 ;;           H
@@ -23,8 +23,8 @@
 ;;; ======================
 ;;;    CONSTRUTOR
 ;;; ======================
-(defun cria-no (estado &optional (g 0) (pai nil))
-  (list estado g pai)
+(defun cria-no (estado &optional (g 0))
+  (list estado g)
 )
 
 (defun operadores ()
@@ -62,21 +62,12 @@
   (fourth estado)
 )
 
-(defun no-f(no)
+(defun no-g(no)
   (second no)
 )
 
-(defun no-g(no)
-  (third no)
-)
 
-(defun no-h(no)
-  (fourth no)
-)
 
-(defun no-pai(no)
-  (fifth no)
-)
 
 
 ;;; ===============================================
@@ -231,25 +222,25 @@
 ;;;     Funções sucessores
 ;;; =========================
 
-(defun novo-sucessor (estado operador)
+(defun novo-sucessor (no operador)
   (cond 
    ((null operador) nil)
-   (t (let ((estado-no (funcall operador estado)))
+   (t (let ((estado-no (funcall operador (no-estado no))))
         (cond
          ((equal estado-no nil) nil)
-         (t estado-no))))
+         (t (cria-no estado-no (+ (no-g no) 1)))))
    )
-)
+))
 
 
-(defun sucessores (estado operadores)
-  (let ((sucessor (novo-sucessor estado (car operadores))))
+(defun sucessores (no operadores)
+  (let ((sucessor (novo-sucessor no (car operadores))))
    (cond
      ((null operadores) nil)
 
-     ((equal sucessor nil) (sucessores estado (rest operadores)))
+     ((equal sucessor nil) (sucessores no (rest operadores)))
 
-     (t (cons (novo-sucessor estado (car operadores)) (sucessores estado (rest operadores))))
+     (t (cons (novo-sucessor no (car operadores)) (sucessores no (rest operadores))))
     )
    )
 )
@@ -405,36 +396,15 @@
 
 ; Constantes
 
-(let ((*jogada* nil) ; <estado> <valor negamax>
-      (*profundidade* 5)) ; tempo máximo para o computador jogar (milisegundos)
-
- ; *jogada*
-
-  (defun reset-jogada ()
-    (setf *jogada* (list nil most-negative-fixnum)))
-
-  (defun alterar-jogada (jogada)
-    (setf *jogada* jogada))
-
-  (defun obter-jogada ()
-    *jogada*)
-
-  ; *profundidade*
-
-  (defun alterar-profundidade (profundidade)
-    (setf *profundidade* profundidade))
-
-  (defun obter-profundidade ()
-    *profundidade*)
-  )
+(let ((*profundidade* 5))) ; tempo máximo para o computador jogar (milisegundos)
 
 
-(defun jogar (estado tempo primeiro-jogador) 
+(defun jogar (no tempo primeiro-jogador) 
   (calcular-profundidade tempo) ; Calcula a profundidade máxima com base no tempo limite para a jogada do computador
   (cond 
      ; alternar entre os jogadores
-   ((equal primeiro-jogador -1) (jogada-humano estado -1))
-   (t (jogada-computador estado -1))
+   ((equal primeiro-jogador -1) (jogada-humano no -1))
+   (t (jogada-computador no -1))
    )
   )
 
@@ -444,25 +414,35 @@
 ;;======================================================================================        
 
 
-(defun jogada-humano (estado jogador)
-  (escrever-estado t estado) ; Escreve o tabuleiro e as pontuações
-  (posicoes-validas estado) ; Escreve as posições para o qual pode jogar (Aplica os operadores)
-  (format t "~%~%Introduza a linha e a coluna onde pretende colocar a peça: ~%")
-  (format t "<letra> <numero de 1 a 10> ~%")
-  (let* ((numero (read))
-         (linha (floor numero 10))
-         (coluna (mod numero 10)))
-    (cond
-     ((and (equal jogador -1) (movimento-válido linha coluna (no-tabuleiro estado))) (let ((jogada_aux1 (colocar-peca linha coluna estado)))
-                                                                           (jogada-computador jogada_aux1 -2) ; manda a jogada ao adversário
-                                                                           ))
-     ((and (equal jogador -2) (movimento-válido linha coluna (no-tabuleiro estado))) (let ((jogada_aux2 (colocar-peca linha coluna estado)))
-                                                                           (jogada-computador jogada_aux2 -1) ; manda a jogada ao adversário
-                                                                           ))
-     (t nil)
-     )
-    )
-  )
+(defun jogada-humano (no jogador)
+  (escrever-estado t (no-estado no)) ; Escreve o tabuleiro e as pontuações
+  (let* ((posicoes (posicoes-validas no))
+        (estado (no-estado no)))
+    (escreve-posicoes-validas posicoes)
+    
+    (cond 
+     ((and (equal jogador -1) (equal posicoes nil)) (jogada-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -2))
+     ((and (equal jogador -2) (equal posicoes nil)) (jogada-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -1))
+     (t 
+      (format t "~%~%Introduza a linha e a coluna onde pretende colocar a peça: ~%")
+      (format t "<letra> <numero de 1 a 10> ~%")
+      (let* ((numero (read))
+             (linha (floor numero 10))
+             (coluna (mod numero 10))
+             )
+         
+        (cond
+          
+         ((and (equal jogador -1) (movimento-válido linha coluna (no-tabuleiro estado)) (let ((jogada_aux1 (list (colocar-peca linha coluna estado) 0))) 
+                                                                                          (jogada-computador jogada_aux1 -2) ; manda a jogada ao adversário
+                                                                                          )))
+         ((and (equal jogador -2) (movimento-válido linha coluna (no-tabuleiro estado)) (let ((jogada_aux2 (list (colocar-peca linha coluna estado) 0)))
+                                                                                          (jogada-computador jogada_aux2 -1) ; manda a jogada ao adversário
+                                                                                          )))
+         (t nil)
+         )
+        )
+      ))))
 
 
 (defun colocar-peca (linha coluna estado) 
@@ -475,23 +455,24 @@
       (operador-default estado indiceL indiceC)))
     
 
-(defun posicoes-validas (estado) 
+(defun posicoes-validas (no) 
   "Devolve todas as posições válidas para mover o cavalo do utilizador"
-  (let ((possiveis-sucessores (sucessores estado (operadores))))
-    (cond
-     ((null possiveis-sucessores) (format  t "~%Ups... Não há jogadas possíveis...:("))
-     (t (format t "Jogadas possíveis: ~A" (obter-posicoes-validas possiveis-sucessores)))
-     )
-    )
-  )
+ (obter-posicoes-validas (sucessores no (operadores))))
+
+(defun escreve-posicoes-validas (posicoes-validas)
+  (cond 
+   ((null posicoes-validas) (format  t "~%Ups... Não há jogadas possíveis...:("))
+   (t (format t "~%Jogadas Possiveis: ~%~A" posicoes-validas))))
 
 (defun obter-posicoes-validas (possiveis-sucessores)
   "Devolve uma lista com os indices das posições possíveis"
+  (let* ((first (first possiveis-sucessores))
+         (estado (no-estado first)))
   (cond
    ((null possiveis-sucessores) nil)
-   (t (cons (posicao-cavalo (no-tabuleiro (first possiveis-sucessores)) (jogador-oposto (no-jogador (first possiveis-sucessores)))) (obter-posicoes-validas (rest possiveis-sucessores))))
+   (t (cons (posicao-cavalo (no-tabuleiro estado) (jogador-oposto (no-jogador estado))) (obter-posicoes-validas (rest possiveis-sucessores))))
    )
-  )
+  ))
 
 
 (defun movimento-válido (linha coluna tabuleiro)
@@ -509,18 +490,23 @@
 ;;======================================================================================        
 
 
-(defun jogada-computador (estado jogador)
-  (cond
-   ((equal jogador -1) (let ((jogada_aux (negamax estado (obter-profundidade) 1))) 
-                         (jogada-humano jogada_aux -2) ; manda a jogada ao adversário
-                         ))
+(defun jogada-computador (no jogador)
+  (let ((estado (no-estado no)))
+    (cond
+     ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 3 1)))
+                           (cond 
+                            ((null jogada_aux) (jogada-humano (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -2))
+                            (t (jogada-humano jogada_aux -2) ; manda a jogada ao adversário
+                               ))))
          
-   ((equal jogador -2) (let ((jogada_aux2 (negamax estado (obter-profundidade) 1)))
-                         (jogada-humano jogada_aux2 -1) ; manda a jogada ao adversário
-                         ))
-   (t nil)
-   )
-  )
+     ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 3 1)))
+                           (cond 
+                            ((null jogada_aux2) (jogada-humano (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -1))
+                            (t (jogada-humano jogada_aux2 -1)) ; manda a jogada ao adversário
+                            )))
+     (t nil)
+     )
+    ))
 
 (defun calcular-profundidade (tempo)
   ;(alterar-profundidade (/ (* (/ tempo 2) 10) "tempo"))
@@ -557,11 +543,11 @@
 
 
 (defun escrever-pontuacao-cavalo-branco (f pontos)
-  (format f "~%Pontuação cavalo branco: " pontos)
+  (format f "~%Pontuação cavalo branco: ~%~A" pontos)
   )
 
 (defun escrever-pontuacao-cavalo-preto (f pontos)
-  (format f "~%Pontuação cavalo preto: " pontos)
+  (format f "~%Pontuação cavalo preto: ~%~A" pontos)
   )
 
 (defun escrever-estado (f estado)
@@ -569,5 +555,8 @@
   (escrever-pontuacao-cavalo-branco f (no-pontos-cavalo-branco estado))
   (escrever-pontuacao-cavalo-preto f (no-pontos-cavalo-preto estado))
   )
+
+(defun no-teste ()
+ '((((42 65 63 -1 73 78 5 32 68 61) (86 30 82 80 28 75 45 50 81 90) (59 24 47 9 67 22 56 77 60 99) (41 62 18 85 76 27 13 94 93 70) (14 54 0 71 35 39 92 38 49 52) (83 11 46 6 48 15 23 88 96 8) (25 84 2 89 7 53 66 31 20 12) (37 19 3 36 10 44 64 16 97 33) (40 69 95 29 4 51 34 1 26 21) (72 79 -2 43 74 55 58 57 91 17)) 87 98 -1) 0))
 
 

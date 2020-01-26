@@ -415,34 +415,37 @@
 
 
 (defun jogada-humano (no jogador)
-  (escrever-estado t (no-estado no)) ; Escreve o tabuleiro e as pontuações
-  (let* ((posicoes (posicoes-validas no))
-        (estado (no-estado no)))
-    (escreve-posicoes-validas posicoes)
+  (cond
+   ((equal (tabuleiro-final no) T) (vencedor no) nil)
+   (t 
+    (escrever-estado t (no-estado no)) ; Escreve o tabuleiro e as pontuações
+    (let* ((posicoes (posicoes-validas no))
+           (estado (no-estado no)))
+      (escreve-posicoes-validas posicoes)
     
-    (cond 
-     ((and (equal jogador -1) (equal posicoes nil)) (jogada-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -2))
-     ((and (equal jogador -2) (equal posicoes nil)) (jogada-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -1))
-     (t 
-      (format t "~%~%Introduza a linha e a coluna onde pretende colocar a peça: ~%")
-      (format t "<letra> <numero de 1 a 10> ~%")
-      (let* ((numero (read))
-             (linha (floor numero 10))
-             (coluna (mod numero 10))
-             )
+      (cond 
+       ((and (equal jogador -1) (equal posicoes nil)) (jogada-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -2))
+       ((and (equal jogador -2) (equal posicoes nil)) (jogada-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -1))
+       (t 
+        (format t "~%~%Introduza a linha e a coluna onde pretende colocar a peça: ~%")
+        (format t "<letra> <numero de 1 a 10> ~%")
+        (let* ((numero (read))
+               (linha (floor numero 10))
+               (coluna (mod numero 10))
+               )
          
-        (cond
+          (cond
           
-         ((and (equal jogador -1) (movimento-válido linha coluna (no-tabuleiro estado)) (let ((jogada_aux1 (list (colocar-peca linha coluna estado) 0))) 
-                                                                                          (jogada-computador jogada_aux1 -2) ; manda a jogada ao adversário
-                                                                                          )))
-         ((and (equal jogador -2) (movimento-válido linha coluna (no-tabuleiro estado)) (let ((jogada_aux2 (list (colocar-peca linha coluna estado) 0)))
-                                                                                          (jogada-computador jogada_aux2 -1) ; manda a jogada ao adversário
-                                                                                          )))
-         (t nil)
-         )
-        )
-      ))))
+           ((and (equal jogador -1) (movimento-válido linha coluna posicoes (no-tabuleiro estado)) (let ((jogada_aux1 (list (colocar-peca linha coluna estado) 0))) 
+                                                                                                     (jogada-computador jogada_aux1 -2) ; manda a jogada ao adversário
+                                                                                                     )))
+           ((and (equal jogador -2) (movimento-válido linha coluna posicoes (no-tabuleiro estado)) (let ((jogada_aux2 (list (colocar-peca linha coluna estado) 0)))
+                                                                                                     (jogada-computador jogada_aux2 -1) ; manda a jogada ao adversário
+                                                                                                     )))
+           (t  (format t "Movimento inválido! Escolha outra posição. ~%") (jogada-humano no jogador))
+           )
+          )
+        ))))))
 
 
 (defun colocar-peca (linha coluna estado) 
@@ -461,7 +464,7 @@
 
 (defun escreve-posicoes-validas (posicoes-validas)
   (cond 
-   ((null posicoes-validas) (format  t "~%Ups... Não há jogadas possíveis...:("))
+   ((null posicoes-validas) (format  t "~%Ups... Não há jogadas possíveis...:( ~%"))
    (t (format t "~%Jogadas Possiveis: ~%~A" posicoes-validas))))
 
 (defun obter-posicoes-validas (possiveis-sucessores)
@@ -474,12 +477,34 @@
    )
   ))
 
+(defun tabuleiro-final (no)
+  (let* ((estado (no-estado no))
+        (sucessores-um (obter-posicoes-validas (sucessores no (operadores))))
+        (sucessores-dois (obter-posicoes-validas (sucessores (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto (no-jogador estado))) 0) (operadores)))))
+    (cond
+     ((and (null sucessores-um) (null sucessores-dois)) T)
+     (t nil))))
 
-(defun movimento-válido (linha coluna tabuleiro)
+(defun vencedor (no)
+  (let ((estado (no-estado no)))
+    (cond
+     ((> (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (format t "Vencedor: Cavalo Branco ~%"))
+     ((< (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (format t "Vencedor: Cavalo Preto ~%"))
+     (t (format t "Empate! ~%")))))
+
+(defun verificar-operador-possivel (posicoes-validas linha coluna)
+  (cond
+   ((null posicoes-validas) nil)
+   ((and (equal linha (first (first posicoes-validas))) (equal coluna (second (first posicoes-validas)))) t)
+   (t (verificar-operador-possivel (rest posicoes-validas) linha coluna))))
+
+
+(defun movimento-válido (linha coluna posicoes-validas tabuleiro)
   "Verifica se é possível aplicar algum operador de modo a colocar o cavalo na prosição que o utilizador pretende"
 
   (cond
-   ((and (< coluna (length (car tabuleiro))) (< linha (length tabuleiro))) t) ; verifica se está dentro dos limites do tabuleiro
+   ((or (< coluna 0) (< linha 0) (>= linha (length tabuleiro)) (>= coluna (length (car tabuleiro)))) nil) ; verifica se está dentro dos limites do tabuleiro
+   ((verificar-operador-possivel posicoes-validas linha coluna) t) 
    (t nil)
    )
   )
@@ -491,22 +516,25 @@
 
 
 (defun jogada-computador (no jogador)
+  (cond
+   ((equal (tabuleiro-final no) T) (vencedor no) nil)
+   (t 
   (let ((estado (no-estado no)))
     (cond
-     ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 3 1)))
+     ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 2 1)))
                            (cond 
                             ((null jogada_aux) (jogada-humano (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -2))
                             (t (jogada-humano jogada_aux -2) ; manda a jogada ao adversário
                                ))))
          
-     ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 3 1)))
+     ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 2 1)))
                            (cond 
                             ((null jogada_aux2) (jogada-humano (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -1))
                             (t (jogada-humano jogada_aux2 -1)) ; manda a jogada ao adversário
                             )))
      (t nil)
      )
-    ))
+    ))))
 
 (defun calcular-profundidade (tempo)
   ;(alterar-profundidade (/ (* (/ tempo 2) 10) "tempo"))
