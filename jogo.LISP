@@ -380,11 +380,11 @@
 ;;                                 JOGAR 
 ;;======================================================================================        
 
-(defun jogar (no tempo primeiro-jogador) 
+(defun jogar (ficheiro no tempo primeiro-jogador) 
   ;(set-tempo-permitido (- tempo 100))
   (cond 
-   ((equal primeiro-jogador -1) (jogada-humano no *Jogador1*))
-   (t (jogada-computador no *Jogador1*))
+   ((equal primeiro-jogador -1) (jogada-humano ficheiro no *Jogador1*))
+   (t (jogada-computador ficheiro no *Jogador1*))
    )
   )
 
@@ -394,18 +394,18 @@
 ;;======================================================================================        
 
 
-(defun jogada-humano (no jogador)
+(defun jogada-humano (ficheiro no jogador)
   (cond
-   ((equal (terminou-jogo no) T) (vencedor no))
+   ((equal (terminou-jogo no) T) (vencedor ficheiro no))
    (T
     (let* ((posicoes (posicoes-validas no))
            (estado (no-estado no)))
-      (escrever-estado t (no-estado no))
+      (escrever-estado ficheiro (no-estado no))
       (escreve-posicoes-validas posicoes)
     
       (cond 
-       ((and (equal jogador *Jogador1*) (equal posicoes nil)) (jogada-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador2*))
-       ((and (equal jogador *Jogador2*) (equal posicoes nil)) (jogada-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
+       ((and (equal jogador *Jogador1*) (equal posicoes nil)) (jogada-computador ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador2*))
+       ((and (equal jogador *Jogador2*) (equal posicoes nil)) (jogada-computador ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
        (t 
         (format t "~%~%Introduza a linha e a coluna onde pretende colocar a peça: ~%")
         (format t "<letra> <numero de 1 a 10> ~%")
@@ -417,12 +417,12 @@
           (cond
           
            ((and (equal jogador *Jogador1*) (movimento-válido linha coluna posicoes (no-tabuleiro estado)) (let ((jogada_aux1 (list (colocar-peca linha coluna estado) 0))) 
-                                                                                                             (jogada-computador jogada_aux1 *Jogador2*) ; manda a jogada ao adversário
+                                                                                                             (jogada-computador ficheiro jogada_aux1 *Jogador2*) ; manda a jogada ao adversário
                                                                                                              )))
            ((and (equal jogador *Jogador2*) (movimento-válido linha coluna posicoes (no-tabuleiro estado)) (let ((jogada_aux2 (list (colocar-peca linha coluna estado) 0)))
-                                                                                                             (jogada-computador jogada_aux2 *Jogador1*) ; manda a jogada ao adversário
+                                                                                                             (jogada-computador ficheiro jogada_aux2 *Jogador1*) ; manda a jogada ao adversário
                                                                                                              )))
-           (T  (format t "Movimento inválido! Escolha outra posição. ~%") (jogada-humano no jogador))
+           (T  (format t "Movimento inválido! Escolha outra posição. ~%") (jogada-humano ficheiro no jogador))
            )
           )
         )
@@ -475,15 +475,29 @@
   )
 
 
-(defun vencedor (no)
+(defun vencedor (ficheiro no)
   "Função para determinar quem é o vencedor"
   (let* ((estado (no-estado no)))
     (cond
-     ((> (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (format t "~%------------------------------------- FIM DO JOGO -------------------------------------")(format t "~%Vencedor: Cavalo Branco ~%" )(format t"~%Pontos do cavalo branco: ~A~%" (no-pontos-cavalo-branco estado)) (format t"~%Pontos do cavalo preto: ~A~%~%" (no-pontos-cavalo-preto estado)) (escrever-tabuleiro t (no-tabuleiro estado)))
-     ((< (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (format t "~%------------------------------------- FIM DO JOGO -------------------------------------")(format t "~%Vencedor: Cavalo Preto ~%")(format t "~%Pontos do cavalo branco: ~A~%" (no-pontos-cavalo-branco estado)) (format t"~%Pontos do cavalo preto: ~A~%~%" (no-pontos-cavalo-preto estado))(escrever-tabuleiro t (no-tabuleiro estado)))
-     (t (format t "Empate! ~%"))
+     ((> (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (escrever-vencedor ficheiro "Cavalo branco" estado))
+     ((< (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (escrever-vencedor ficheiro "Cavalo preto" estado))
+     (t (format ficheiro "Empate! ~%"))
      )
     )
+  )
+
+(defun escrever-vencedor (ficheiro cavalo estado)
+  (format ficheiro "~%------------------------------------- FIM DO JOGO -------------------------------------")
+  (format ficheiro "~%Vencedor: ~A~%" cavalo)
+  (format ficheiro"~%Pontos do cavalo branco: ~A~%" (no-pontos-cavalo-branco estado)) 
+  (format ficheiro "~%Pontos do cavalo preto: ~A~%~%" (no-pontos-cavalo-preto estado)) 
+  (escrever-tabuleiro ficheiro (no-tabuleiro estado))
+
+  (format t "~%------------------------------------- FIM DO JOGO -------------------------------------")
+  (format t "~%Vencedor: ~A~%" cavalo)
+  (format t"~%Pontos do cavalo branco: ~A~%" (no-pontos-cavalo-branco estado)) 
+  (format t "~%Pontos do cavalo preto: ~A~%~%" (no-pontos-cavalo-preto estado)) 
+  (escrever-tabuleiro t (no-tabuleiro estado))
   )
 
 
@@ -538,56 +552,64 @@
 ;;======================================================================================
 ;;                                 JOGADA COMPUTADOR
 ;;======================================================================================        
-(defun metricas ()
+(defun metricas (ficheiro)
+  (format ficheiro "~%---Métricas---~%")
+  (format ficheiro "~%Nós Analisados: ~%~A~%" (get-nos-analisados))
+  (format ficheiro "~%Cortes Beta: ~%~A~%" (get-cortes-beta))
+  (format ficheiro "~%Cortes Alfa: ~%~A~%" (get-cortes-alfa))
+  (format ficheiro "~%Tempo da jogada: ~%~A~%" (get-tempo-jogada))
+  (format ficheiro "~%--------------~%")
+  
   (format t "~%---Métricas---~%")
   (format t "~%Nós Analisados: ~%~A~%" (get-nos-analisados))
   (format t "~%Cortes Beta: ~%~A~%" (get-cortes-beta))
   (format t "~%Cortes Alfa: ~%~A~%" (get-cortes-alfa))
   (format t "~%Tempo da jogada: ~%~A~%" (get-tempo-jogada))
-  (format t "~%--------------~%"))
+  (format t "~%--------------~%")
+)
 
 
-(defun jogada-computador (no jogador)
+(defun jogada-computador (ficheiro no jogador)
   (cond
-   ((equal (terminou-jogo no) T) (vencedor no))
+   ((equal (terminou-jogo no) T) (vencedor ficheiro no))
    (t 
   (let ((estado (no-estado no)))
     (cond
      ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 6 1)))
                            (cond 
-                            ((null jogada_aux) (jogada-humano (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador2*))
-                            (t (metricas) (jogada-humano jogada_aux *Jogador2*)  ; manda a jogada ao adversário
+                            ((null jogada_aux) (jogada-humano ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador2*))
+                            (t (metricas ficheiro) (jogada-humano ficheiro jogada_aux *Jogador2*)  ; manda a jogada ao adversário
                                ))))
          
      ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 6 1)))
                            (cond 
-                            ((null jogada_aux2) (jogada-humano (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
-                            (t (metricas)(jogada-humano jogada_aux2 *Jogador1*)  ; manda a jogada ao adversário
+                            ((null jogada_aux2) (jogada-humano ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
+                            (t (metricas ficheiro) (jogada-humano ficheiro jogada_aux2 *Jogador1*)  ; manda a jogada ao adversário
                             ))))
      (t nil)
      )
     ))))
 
-(defun jogada-computador-computador (no jogador)
+(defun jogada-computador-computador (ficheiro no jogador)
   (cond
-   ((equal (terminou-jogo no) T) (vencedor no))
+   ((equal (terminou-jogo no) T) (vencedor ficheiro no))
    (t 
   (let ((estado (no-estado no)))
     
     (cond
      ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 5 1)))
                            (format t"~%------------------------------------------~%")
-      (escrever-estado t (no-estado no))
+      (escrever-estado ficheiro (no-estado no))
                            (cond 
-                            ((null jogada_aux) (jogada-computador-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador2*))
-                            (t (metricas) (jogada-computador-computador jogada_aux *Jogador2*) ; manda a jogada ao adversário
+                            ((null jogada_aux) (jogada-computador-computador ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador2*))
+                            (t (metricas ficheiro) (jogada-computador-computador ficheiro jogada_aux *Jogador2*) ; manda a jogada ao adversário
                                ))))
          
      ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 5 1)))
 
                            (cond 
-                            ((null jogada_aux2) (jogada-computador-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
-                            (t (metricas) (jogada-computador-computador jogada_aux2 *Jogador1*)) ; manda a jogada ao adversário
+                            ((null jogada_aux2) (jogada-computador-computador ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
+                            (t (metricas ficheiro) (jogada-computador-computador ficheiro jogada_aux2 *Jogador1*)) ; manda a jogada ao adversário
                             )))
      (t nil)
      )
@@ -627,7 +649,6 @@
 
 
 (defun escrever-tabuleiro (f tabuleiro)
-  ;(format f "~%Tabuleiro: ~%")
   (cond
    ((null tabuleiro) (format t "------------------------------------------"))
    (t (escrever-linha-tabuleiro f (car tabuleiro)) (escrever-tabuleiro f (cdr tabuleiro))))
@@ -637,7 +658,7 @@
 
 (defun escrever-linha-tabuleiro (f linha)
   (cond
-   ((null linha) (format t "~%"))
+   ((null linha) (format f "~%"))
    (t (format f "~3A|" (car linha)) (escrever-linha-tabuleiro f (cdr linha)))
   ))
 
@@ -645,14 +666,17 @@
 
 (defun escrever-pontuacao-cavalo-branco (f pontos)
   (format f "~%~%Pontuação cavalo branco: ~%~A~%" pontos)
+  (format t "~%~%Pontuação cavalo branco: ~%~A~%" pontos)
   )
 
 (defun escrever-pontuacao-cavalo-preto (f pontos)
   (format f "~%Pontuação cavalo preto: ~%~A~%" pontos)
+  (format t "~%Pontuação cavalo preto: ~%~A~%" pontos)
   )
 
 (defun escrever-estado (f estado)
   (escrever-tabuleiro f (no-tabuleiro estado))
+  (escrever-tabuleiro t (no-tabuleiro estado))
   (escrever-pontuacao-cavalo-branco f (no-pontos-cavalo-branco estado))
   (escrever-pontuacao-cavalo-preto f (no-pontos-cavalo-preto estado))
   )

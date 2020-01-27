@@ -63,15 +63,14 @@
 
 (defun negamax-inicial (no d cor)
   (let* ((reset (reset-jogada))
-         (tempo-acabado (set-tempo-acabado (+ (get-internal-real-time) (get-tempo-permitido))))
+        ; (tempo-acabado (set-tempo-acabado (+ (get-internal-real-time) (get-tempo-permitido))))
          (reset-nos-analisados (set-nos-analisados 0))
          (reset-cortes-beta (set-cortes-beta 0))
          (reset-cortes-alfa (set-cortes-alfa 0))
-         (tempo-inicial (get-internal-real-time))
-         (reset-tempo-jogada (set-tempo-jogada 0))
-         (negamax (negamax no d cor))
-         (tempo-jogada (set-tempo-jogada (- (get-internal-real-time) tempo-inicial))))
-    (print (get-tempo-jogada))
+         ;(tempo-inicial (get-internal-real-time))
+         ;(reset-tempo-jogada (set-tempo-jogada 0))
+         (negamax (negamax no d cor)))
+         ;(tempo-jogada (set-tempo-jogada (- (get-internal-real-time) tempo-inicial))))
     (first *jogada*)))
 
 (defun negamax-sucessores (d cor sucessores alfa beta &optional (bestValue most-negative-fixnum))
@@ -97,7 +96,7 @@
   (let* ((sucessores (sucessores no (operadores)))
         (estado (no-estado no)))
     (cond
-     ((or (null sucessores) (>= (get-internal-real-time) (get-tempo-acabado))) (* cor (funcao-avaliacao-nos-folha (second estado) (third estado)))) 
+     ((null sucessores) (* cor (funcao-avaliacao-nos-folha (second estado) (third estado)))) 
      ((equal d 0) (* cor (funcao-avaliacao-pseudo-nos-folha (second estado) (third estado)))) 
      (t (negamax-sucessores d cor sucessores alfa beta)))))
 

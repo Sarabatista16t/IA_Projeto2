@@ -4,19 +4,817 @@ UC Inteligencia Artificial                               Ano letivo 2019/2020
 
 Projeto realizado por:
    * Sara Batista, numero 170221054
-   * Carolina Castilho, numero 180221078
+   * Carolina Castilho, numero 180221071
 
 =============================================================================
 
+27 |79 |24 |63 |95 |17 |47 |4  |12 |-1 |
+14 |23 |39 |26 |32 |82 |98 |51 |66 |45 |
+72 |87 |11 |36 |0  |83 |43 |62 |10 |16 |
+54 |80 |9  |94 |89 |3  |81 |38 |91 |40 |
+22 |35 |56 |70 |34 |42 |8  |15 |33 |21 |
+60 |61 |41 |2  |44 |78 |25 |99 |5  |53 |
+59 |13 |46 |58 |65 |30 |92 |52 |69 |37 |
+19 |20 |97 |18 |84 |48 |49 |90 |55 |64 |
+77 |75 |93 |29 |71 |74 |85 |1  |88 |57 |
+73 |68 |50 |-2 |76 |6  |31 |7  |67 |28 |
 
-============================================================================= 
-                                   SOLUCAO
-============================================================================= 
-NIL 
 
-=============================================================================
-                                 ESTATISTICAS
-=============================================================================
-Numero total de nos gerados: 0 
-Numero total de nos expandidos: 0 
-Penetrancia: 0.00000 
+Pontuação cavalo branco: 
+96
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+164
+
+Cortes Beta: 
+10
+
+Cortes Alfa: 
+24
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |24 |63 |95 |17 |47 |4  |12 |NIL|
+14 |23 |39 |26 |32 |82 |98 |51 |66 |45 |
+72 |87 |11 |36 |0  |83 |43 |62 |-1 |16 |
+54 |80 |9  |94 |89 |3  |81 |38 |91 |40 |
+22 |35 |56 |70 |34 |42 |8  |15 |33 |21 |
+60 |61 |41 |2  |44 |78 |25 |99 |5  |53 |
+59 |13 |46 |58 |65 |30 |92 |52 |69 |37 |
+19 |20 |97 |18 |84 |48 |49 |90 |55 |64 |
+77 |75 |93 |29 |71 |74 |85 |NIL|88 |57 |
+73 |68 |50 |-2 |76 |6  |31 |7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+106
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+464
+
+Cortes Beta: 
+30
+
+Cortes Alfa: 
+73
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |24 |63 |95 |17 |47 |4  |12 |NIL|
+14 |23 |39 |26 |32 |82 |98 |NIL|66 |45 |
+72 |87 |11 |36 |0  |83 |43 |62 |NIL|16 |
+54 |80 |9  |94 |89 |3  |81 |38 |91 |40 |
+22 |35 |56 |70 |34 |42 |8  |-1 |33 |21 |
+60 |61 |41 |2  |44 |78 |25 |99 |5  |53 |
+59 |13 |46 |58 |65 |30 |92 |52 |69 |37 |
+19 |20 |97 |18 |84 |48 |49 |90 |55 |64 |
+77 |75 |93 |29 |71 |74 |85 |NIL|88 |57 |
+73 |68 |50 |-2 |76 |6  |31 |7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+121
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+754
+
+Cortes Beta: 
+42
+
+Cortes Alfa: 
+134
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |24 |63 |95 |17 |47 |4  |12 |NIL|
+14 |23 |39 |26 |32 |82 |98 |NIL|66 |45 |
+72 |87 |11 |36 |0  |83 |43 |62 |NIL|16 |
+54 |80 |9  |94 |89 |-1 |81 |38 |91 |40 |
+22 |35 |56 |70 |34 |42 |8  |NIL|33 |21 |
+60 |61 |41 |2  |44 |78 |25 |99 |5  |53 |
+59 |13 |46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |20 |97 |18 |84 |48 |49 |90 |55 |64 |
+77 |75 |93 |29 |71 |74 |85 |NIL|88 |57 |
+73 |68 |50 |-2 |76 |6  |31 |7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+124
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+460
+
+Cortes Beta: 
+47
+
+Cortes Alfa: 
+34
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |24 |63 |95 |17 |47 |4  |12 |NIL|
+14 |23 |39 |26 |32 |82 |98 |NIL|66 |45 |
+72 |87 |11 |36 |0  |83 |43 |62 |NIL|16 |
+54 |80 |9  |94 |89 |NIL|81 |38 |91 |40 |
+22 |35 |56 |70 |34 |42 |8  |NIL|33 |21 |
+60 |61 |41 |2  |-1 |78 |25 |NIL|5  |53 |
+59 |13 |46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |20 |97 |18 |84 |48 |49 |90 |55 |64 |
+77 |75 |93 |29 |71 |74 |85 |NIL|88 |57 |
+73 |68 |50 |-2 |76 |6  |31 |7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+168
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+527
+
+Cortes Beta: 
+48
+
+Cortes Alfa: 
+61
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |24 |63 |95 |17 |47 |4  |12 |NIL|
+14 |23 |39 |26 |32 |82 |98 |NIL|66 |45 |
+72 |87 |11 |36 |0  |83 |43 |62 |NIL|16 |
+54 |80 |9  |94 |89 |NIL|NIL|38 |91 |40 |
+22 |35 |56 |70 |34 |42 |8  |NIL|33 |21 |
+60 |61 |41 |2  |NIL|78 |25 |NIL|5  |53 |
+59 |13 |46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |20 |97 |-1 |84 |48 |49 |90 |55 |64 |
+77 |75 |93 |29 |71 |74 |85 |NIL|88 |57 |
+73 |68 |50 |-2 |76 |6  |31 |7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+186
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+482
+
+Cortes Beta: 
+30
+
+Cortes Alfa: 
+93
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |24 |63 |95 |17 |47 |4  |12 |NIL|
+14 |23 |39 |26 |32 |82 |98 |NIL|66 |45 |
+72 |87 |11 |36 |0  |83 |43 |62 |NIL|16 |
+54 |80 |9  |94 |89 |NIL|NIL|38 |91 |40 |
+22 |35 |56 |70 |34 |42 |8  |NIL|33 |21 |
+60 |61 |41 |2  |NIL|78 |25 |NIL|5  |53 |
+59 |-1 |46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |20 |97 |NIL|84 |48 |49 |90 |55 |64 |
+77 |75 |93 |29 |71 |74 |85 |NIL|88 |57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+199
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+527
+
+Cortes Beta: 
+22
+
+Cortes Alfa: 
+106
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |24 |63 |95 |17 |47 |4  |12 |NIL|
+14 |23 |39 |26 |32 |82 |98 |NIL|66 |45 |
+72 |87 |11 |36 |0  |83 |43 |62 |NIL|16 |
+54 |80 |9  |94 |89 |NIL|NIL|38 |91 |40 |
+22 |35 |56 |70 |34 |42 |8  |NIL|33 |21 |
+60 |61 |41 |-1 |NIL|78 |25 |NIL|5  |53 |
+59 |NIL|46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |49 |90 |55 |64 |
+77 |75 |93 |29 |71 |74 |85 |NIL|88 |57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+201
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+556
+
+Cortes Beta: 
+42
+
+Cortes Alfa: 
+87
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |24 |63 |95 |17 |47 |4  |12 |NIL|
+14 |23 |39 |26 |32 |82 |98 |NIL|66 |45 |
+72 |87 |11 |36 |0  |83 |43 |62 |NIL|16 |
+54 |80 |-1 |94 |89 |NIL|NIL|38 |91 |40 |
+22 |35 |56 |70 |34 |42 |8  |NIL|33 |21 |
+60 |61 |41 |NIL|NIL|78 |25 |NIL|5  |53 |
+59 |NIL|46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |49 |NIL|55 |64 |
+77 |75 |93 |29 |71 |74 |85 |NIL|88 |57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+210
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+462
+
+Cortes Beta: 
+38
+
+Cortes Alfa: 
+63
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |24 |63 |95 |17 |47 |4  |12 |NIL|
+14 |23 |39 |26 |32 |82 |98 |NIL|66 |45 |
+72 |87 |11 |36 |-1 |83 |43 |62 |NIL|16 |
+54 |80 |NIL|94 |89 |NIL|NIL|38 |91 |40 |
+22 |35 |56 |70 |34 |42 |8  |NIL|33 |21 |
+60 |61 |41 |NIL|NIL|78 |25 |NIL|5  |53 |
+59 |NIL|46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |49 |NIL|55 |64 |
+77 |75 |93 |29 |71 |74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+210
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+374
+
+Cortes Beta: 
+30
+
+Cortes Alfa: 
+54
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |24 |63 |95 |-1 |47 |4  |12 |NIL|
+14 |23 |39 |26 |32 |82 |98 |NIL|66 |45 |
+72 |87 |11 |36 |NIL|83 |43 |62 |NIL|16 |
+54 |80 |NIL|94 |89 |NIL|NIL|38 |91 |40 |
+22 |35 |56 |70 |34 |42 |8  |NIL|33 |21 |
+60 |61 |41 |NIL|NIL|78 |25 |NIL|5  |53 |
+59 |NIL|46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |49 |NIL|55 |64 |
+77 |75 |93 |29 |NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+227
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+138
+
+Cortes Beta: 
+10
+
+Cortes Alfa: 
+27
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |24 |63 |95 |NIL|47 |4  |12 |NIL|
+14 |23 |39 |26 |32 |82 |98 |NIL|66 |45 |
+72 |87 |11 |36 |NIL|83 |-1 |62 |NIL|16 |
+54 |80 |NIL|94 |89 |NIL|NIL|38 |91 |40 |
+22 |35 |56 |70 |NIL|42 |8  |NIL|33 |21 |
+60 |61 |41 |NIL|NIL|78 |25 |NIL|5  |53 |
+59 |NIL|46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |49 |NIL|55 |64 |
+77 |75 |93 |29 |NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+270
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+358
+
+Cortes Beta: 
+27
+
+Cortes Alfa: 
+51
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |24 |63 |95 |NIL|47 |4  |12 |NIL|
+14 |NIL|39 |26 |-1 |82 |98 |NIL|66 |45 |
+72 |87 |11 |36 |NIL|83 |NIL|62 |NIL|16 |
+54 |80 |NIL|94 |89 |NIL|NIL|38 |91 |40 |
+22 |35 |56 |70 |NIL|42 |8  |NIL|33 |21 |
+60 |61 |41 |NIL|NIL|78 |25 |NIL|5  |53 |
+59 |NIL|46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |49 |NIL|55 |64 |
+77 |75 |93 |29 |NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+302
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+332
+
+Cortes Beta: 
+17
+
+Cortes Alfa: 
+72
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |-1 |63 |95 |NIL|47 |4  |12 |NIL|
+14 |NIL|39 |26 |NIL|82 |98 |NIL|66 |45 |
+72 |87 |11 |36 |NIL|83 |NIL|62 |NIL|16 |
+54 |80 |NIL|94 |89 |NIL|NIL|38 |91 |40 |
+22 |35 |56 |70 |NIL|NIL|8  |NIL|33 |21 |
+60 |61 |41 |NIL|NIL|78 |25 |NIL|5  |53 |
+59 |NIL|46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |49 |NIL|55 |64 |
+77 |75 |93 |29 |NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+326
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+227
+
+Cortes Beta: 
+7
+
+Cortes Alfa: 
+63
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |NIL|63 |95 |NIL|47 |4  |12 |NIL|
+-1 |NIL|39 |26 |NIL|82 |98 |NIL|66 |45 |
+72 |87 |11 |36 |NIL|83 |NIL|62 |NIL|16 |
+54 |80 |NIL|94 |89 |NIL|NIL|38 |91 |40 |
+22 |35 |56 |70 |NIL|NIL|8  |NIL|33 |21 |
+60 |61 |NIL|NIL|NIL|78 |25 |NIL|5  |53 |
+59 |NIL|46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |49 |NIL|55 |64 |
+77 |75 |93 |29 |NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+340
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+203
+
+Cortes Beta: 
+13
+
+Cortes Alfa: 
+34
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |NIL|63 |95 |NIL|47 |4  |12 |NIL|
+NIL|NIL|39 |26 |NIL|82 |98 |NIL|66 |45 |
+72 |87 |-1 |36 |NIL|83 |NIL|62 |NIL|16 |
+54 |80 |NIL|94 |89 |NIL|NIL|38 |91 |40 |
+22 |35 |56 |70 |NIL|NIL|8  |NIL|33 |21 |
+60 |61 |NIL|NIL|NIL|78 |25 |NIL|5  |53 |
+59 |NIL|46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |49 |NIL|55 |64 |
+NIL|75 |93 |29 |NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+351
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+214
+
+Cortes Beta: 
+25
+
+Cortes Alfa: 
+21
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |NIL|63 |95 |NIL|47 |4  |12 |NIL|
+NIL|NIL|39 |26 |NIL|82 |98 |NIL|66 |45 |
+72 |87 |NIL|36 |NIL|83 |NIL|62 |NIL|16 |
+54 |80 |NIL|94 |89 |NIL|NIL|38 |91 |40 |
+22 |-1 |56 |70 |NIL|NIL|8  |NIL|33 |21 |
+60 |61 |NIL|NIL|NIL|78 |25 |NIL|5  |NIL|
+59 |NIL|46 |58 |65 |NIL|92 |52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |49 |NIL|55 |64 |
+NIL|75 |93 |29 |NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+386
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+165
+
+Cortes Beta: 
+14
+
+Cortes Alfa: 
+34
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |NIL|63 |95 |NIL|47 |4  |12 |NIL|
+NIL|NIL|39 |26 |NIL|82 |98 |NIL|66 |45 |
+72 |87 |NIL|36 |NIL|83 |NIL|62 |NIL|16 |
+54 |80 |NIL|94 |89 |NIL|NIL|38 |91 |40 |
+22 |NIL|56 |70 |NIL|NIL|8  |NIL|33 |21 |
+60 |61 |NIL|NIL|NIL|78 |25 |NIL|5  |NIL|
+59 |NIL|-1 |58 |65 |NIL|92 |52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |49 |NIL|55 |NIL|
+NIL|75 |93 |29 |NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+432
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+184
+
+Cortes Beta: 
+24
+
+Cortes Alfa: 
+21
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |NIL|63 |95 |NIL|47 |4  |12 |NIL|
+NIL|NIL|39 |26 |NIL|82 |98 |NIL|66 |45 |
+72 |87 |NIL|36 |NIL|83 |NIL|62 |NIL|16 |
+54 |80 |NIL|94 |89 |NIL|NIL|38 |91 |40 |
+22 |NIL|56 |70 |NIL|NIL|8  |NIL|33 |21 |
+60 |61 |NIL|NIL|NIL|78 |25 |NIL|5  |NIL|
+59 |NIL|NIL|58 |65 |NIL|NIL|52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |49 |NIL|55 |NIL|
+NIL|75 |93 |-1 |NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+461
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+209
+
+Cortes Beta: 
+18
+
+Cortes Alfa: 
+28
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |NIL|63 |95 |NIL|47 |4  |12 |NIL|
+NIL|NIL|39 |26 |NIL|82 |98 |NIL|66 |45 |
+72 |87 |NIL|36 |NIL|83 |NIL|62 |NIL|16 |
+54 |80 |NIL|94 |89 |NIL|NIL|38 |91 |40 |
+22 |NIL|NIL|70 |NIL|NIL|8  |NIL|33 |21 |
+60 |61 |NIL|NIL|NIL|78 |25 |NIL|5  |NIL|
+59 |NIL|NIL|58 |-1 |NIL|NIL|52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |49 |NIL|55 |NIL|
+NIL|75 |93 |NIL|NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+526
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+153
+
+Cortes Beta: 
+19
+
+Cortes Alfa: 
+9
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |NIL|63 |95 |NIL|47 |4  |12 |NIL|
+NIL|NIL|39 |26 |NIL|82 |98 |NIL|66 |45 |
+72 |87 |NIL|36 |NIL|83 |NIL|62 |NIL|16 |
+54 |80 |NIL|NIL|89 |NIL|NIL|38 |91 |40 |
+22 |NIL|NIL|70 |NIL|NIL|8  |NIL|33 |21 |
+60 |61 |NIL|NIL|NIL|78 |25 |NIL|5  |NIL|
+59 |NIL|NIL|58 |NIL|NIL|NIL|52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |-1 |NIL|55 |NIL|
+NIL|75 |93 |NIL|NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|7  |67 |28 |
+
+
+Pontuação cavalo branco: 
+575
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+78
+
+Cortes Beta: 
+0
+
+Cortes Alfa: 
+16
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |NIL|63 |95 |NIL|47 |4  |12 |NIL|
+NIL|NIL|39 |26 |NIL|82 |98 |NIL|66 |45 |
+72 |87 |NIL|36 |NIL|83 |NIL|62 |NIL|16 |
+54 |80 |NIL|NIL|89 |NIL|NIL|38 |91 |40 |
+22 |NIL|NIL|NIL|NIL|NIL|8  |NIL|33 |21 |
+60 |61 |NIL|NIL|NIL|78 |25 |NIL|5  |NIL|
+59 |NIL|NIL|58 |NIL|NIL|NIL|52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |NIL|NIL|55 |NIL|
+NIL|75 |93 |NIL|NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|-1 |67 |28 |
+
+
+Pontuação cavalo branco: 
+582
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+42
+
+Cortes Beta: 
+0
+
+Cortes Alfa: 
+10
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |NIL|63 |95 |NIL|47 |4  |12 |NIL|
+NIL|NIL|39 |26 |NIL|82 |98 |NIL|NIL|45 |
+72 |87 |NIL|36 |NIL|83 |NIL|62 |NIL|16 |
+54 |80 |NIL|NIL|89 |NIL|NIL|38 |91 |40 |
+22 |NIL|NIL|NIL|NIL|NIL|8  |NIL|33 |21 |
+60 |61 |NIL|NIL|NIL|78 |25 |NIL|5  |NIL|
+59 |NIL|NIL|58 |NIL|NIL|NIL|52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |NIL|NIL|-1 |NIL|
+NIL|75 |93 |NIL|NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|NIL|67 |28 |
+
+
+Pontuação cavalo branco: 
+637
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+6
+
+Cortes Beta: 
+0
+
+Cortes Alfa: 
+1
+
+Tempo da jogada: 
+0
+
+--------------
+27 |79 |NIL|63 |95 |NIL|47 |4  |12 |NIL|
+NIL|NIL|39 |26 |NIL|NIL|98 |NIL|NIL|45 |
+72 |87 |NIL|36 |NIL|83 |NIL|62 |NIL|16 |
+54 |80 |NIL|NIL|89 |NIL|NIL|38 |91 |40 |
+22 |NIL|NIL|NIL|NIL|NIL|8  |NIL|33 |21 |
+60 |61 |NIL|NIL|NIL|78 |25 |NIL|5  |NIL|
+59 |NIL|NIL|58 |NIL|NIL|NIL|52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |NIL|NIL|NIL|NIL|
+NIL|75 |93 |NIL|NIL|74 |85 |NIL|NIL|57 |
+73 |68 |50 |-2 |76 |6  |NIL|NIL|67 |-1 |
+
+
+Pontuação cavalo branco: 
+665
+
+Pontuação cavalo preto: 
+86
+
+---Métricas---
+
+Nós Analisados: 
+2
+
+Cortes Beta: 
+0
+
+Cortes Alfa: 
+1
+
+Tempo da jogada: 
+0
+
+--------------
+
+------------------------------------- FIM DO JOGO -------------------------------------
+Vencedor: Cavalo branco
+
+Pontos do cavalo branco: 665
+
+Pontos do cavalo preto: 160
+
+27 |79 |NIL|63 |95 |NIL|NIL|4  |12 |NIL|
+NIL|NIL|39 |26 |NIL|NIL|98 |NIL|NIL|45 |
+72 |87 |NIL|36 |NIL|83 |NIL|62 |NIL|16 |
+54 |80 |NIL|NIL|89 |NIL|NIL|38 |91 |40 |
+22 |NIL|NIL|NIL|NIL|NIL|8  |NIL|33 |21 |
+60 |61 |NIL|NIL|NIL|78 |25 |NIL|5  |NIL|
+59 |NIL|NIL|58 |NIL|NIL|NIL|52 |69 |37 |
+19 |NIL|97 |NIL|84 |48 |NIL|NIL|NIL|NIL|
+NIL|75 |93 |NIL|NIL|-2 |85 |NIL|NIL|57 |
+73 |68 |50 |NIL|76 |6  |NIL|NIL|67 |-1 |
