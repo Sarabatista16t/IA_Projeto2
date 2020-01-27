@@ -29,11 +29,12 @@
       (escrever-cabecalho f)
       (cond 
        ((equal (third parametros) 2) (jogada-computador-computador f (list (posicionar-jogadores-no-tabuleiro (tabuleiro-aleatorio (baralhar (lista-numeros)) 10) (second parametros)) 0) (second parametros)))
-       (t (jogar f (list (posicionar-jogadores-no-tabuleiro (tabuleiro-aleatorio (baralhar (lista-numeros)) 10) (second parametros)) 0) (first parametros) (second parametros)))
-       )
+       (t (jogar f (list (tabuleiro-inicial (tabuleiro-aleatorio (baralhar (lista-numeros)) 10) (second parametros)) 0) (first parametros) (second parametros)))
+      )
       )
     )
   )
+
 
 
 ;;=========================================

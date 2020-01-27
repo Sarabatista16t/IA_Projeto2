@@ -82,7 +82,7 @@
            (jogada (cond ((and (> bestSucessor (second *jogada*)) (equal (no-profundidade (first sucessores)) 1)) (setf *jogada* (list (first sucessores) bestSucessor)))))
            (newAlfa (max alfa bestSucessor)))
       (cond
-       ((>= newAlfa beta) (cortes cor) bestSucessor)
+       ((>= newAlfa beta) bestSucessor)
        (t (negamax-sucessores d cor (rest sucessores) newAlfa beta bestSucessor)))))))
 
 (defun cortes (cor)
@@ -92,7 +92,7 @@
 
 
 (defun negamax (no d cor &optional (alfa -1) (beta 1))
-  (set-nos-analisados (+ (get-nos-analisados) 1))
+  ;(set-nos-analisados (+ (get-nos-analisados) 1))
   (let* ((sucessores (sucessores no (operadores)))
         (estado (no-estado no)))
     (cond

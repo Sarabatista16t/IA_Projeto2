@@ -9,26 +9,27 @@
 
 ;; CARREGAR FICHEIROS
 
-;(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP") 
-;(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
+;(load "C:\\Users\\carol\\OneDrive\\3ï¿½Ano\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP") 
+;(load "C:\\Users\\carol\\OneDrive\\3ï¿½Ano\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
 
-;(load "C:\\Users\\Carolina\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP")
-;(load "C:\\Users\\Carolina\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
+;(load "C:\\Users\\Carolina\\OneDrive\\3ï¿½Ano\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP")
+;(load "C:\\Users\\Carolina\\OneDrive\\3ï¿½Ano\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
 
-(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
-(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
+(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5ï¿½ Semestre\\Inteligï¿½ncia Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
+(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5ï¿½ Semestre\\Inteligï¿½ncia Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
 
 ;;=========================================
 ;;      INPUT E LEITURA DE FICHEIROS  
 ;;=========================================
 
-;;; Inicialização do programa
+;;; Inicializaï¿½ï¿½o do programa
 (defun iniciar ()
   (let ((parametros (menu)))
-    (with-open-file (f "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output) 
+    (with-open-file (f "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5ï¿½ Semestre\\Inteligï¿½ncia Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output :if-exists :supersede) 
+      (escrever-cabecalho f)
       (cond 
        ((equal (third parametros) 2) (jogada-computador-computador f (list (posicionar-jogadores-no-tabuleiro (tabuleiro-aleatorio (baralhar (lista-numeros)) 10) (second parametros)) 0) (second parametros)))
-       (t (jogar f (list (posicionar-jogadores-no-tabuleiro (tabuleiro-aleatorio (baralhar (lista-numeros)) 10) (second parametros)) 0) (first parametros) (second parametros)))
+       (t (jogar f (list (tabuleiro-inicial (tabuleiro-aleatorio (baralhar (lista-numeros)) 10) (second parametros)) 0) (first parametros) (second parametros))
        )
       )
     )
@@ -49,7 +50,7 @@
   )
 
 (defun perguntar-modo-jogo ()
-  "Função que devolve o modo de jogo"
+  "Funï¿½ï¿½o que devolve o modo de jogo"
   (progn
     (escrever-cabecalho t)
     (format t "Selecione o modo de jogo: ~%")
@@ -75,7 +76,7 @@
   )
 
 (defun menu ()
-  "Devolve uma lista com os operadores necessários ao jogo: primeiro-jogador, tempo"
+  "Devolve uma lista com os operadores necessï¿½rios ao jogo: primeiro-jogador, tempo"
   (let* ((modo-jogo (perguntar-modo-jogo))
          (tempo (perguntar-tempo)))
     (cond 
@@ -96,13 +97,9 @@
 ;;                OUTPUT  
 ;;=========================================
 
-;; Função para escrever o tabuleiro no final do jogo num ficheiro
-(defun escrever-tabuleiro-final-jogo (tabuleiro f)
-  "Escreve no ficheiro a lista que representa o tabuleiro atualizado no final do jogo"
-  (format f "~A" tabuleiro)
-)
+;; Funï¿½ï¿½o para escrever o tabuleiro no final do jogo num ficheiro
 
-;; Funções para escrever as estatisticas num ficheiro
+;; Funï¿½ï¿½es para escrever as estatisticas num ficheiro
 
 
 

@@ -323,6 +323,8 @@
 
 
 
+
+
 ;;======================================================================================
 ;;                "OPERADOR 0" (Posicionar os cavalos no inicio do jogo)
 ;;======================================================================================        
@@ -351,7 +353,7 @@
   (substituir 0 (obter-indice-do-valor-maximo (linha 0 tabuleiro)) tabuleiro *Jogador1*)
 )
 
-(defun pontuação-inicial-cavalo-branco (tabuleiro)
+(defun pontuacao-inicial-cavalo-branco (tabuleiro)
   "Função que devolve a pontuação inicial do cavalo branco (valor da maior casa da 1ª linha)"
   (celula 0 (obter-indice-do-valor-maximo (linha 0 tabuleiro)) tabuleiro)
 )
@@ -361,17 +363,51 @@
   (substituir 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro *Jogador2*)
 )
 
-(defun pontuação-inicial-cavalo-preto (tabuleiro)
+(defun pontuacao-inicial-cavalo-preto (tabuleiro)
   "Função que devolve a pontuação inicial do cavalo preto (valor da maior casa da 10ª linha)"
   (celula 9 (obter-indice-do-valor-maximo (linha 9 tabuleiro)) tabuleiro)
 )
 
+
 (defun posicionar-jogadores-no-tabuleiro (tabuleiro jogador)
   "Função que cria o nó inicial com o tabuleiro e aplica as funções para colocar os cavalos no inicio do jogo"
-  (list (colocar-cavalo-preto (colocar-cavalo-branco tabuleiro)) (pontuação-inicial-cavalo-branco tabuleiro) (pontuação-inicial-cavalo-preto tabuleiro) jogador)
+  (list (colocar-cavalo-preto (colocar-cavalo-branco tabuleiro)) (pontuacao-inicial-cavalo-branco tabuleiro) (pontuacao-inicial-cavalo-preto tabuleiro) jogador)
     ; jogador 1  =>  -1  =>   cavalo branco
     ; jogador 2  =>  -2  =>   cavalo preto
   )
+
+(defun substituir-casa-cavalo-branco (tabuleiro)
+  (let* ((valor-cavalo (pontuacao-inicial-cavalo-branco tabuleiro))
+         (tabuleiro-inicial (colocar-cavalo-branco tabuleiro))
+         (duplo (procura-duplo tabuleiro-inicial))
+         (linha-celula-duplo (first duplo))
+         (coluna-celula-duplo (second duplo))
+         (simetrico (procura-celula valor-cavalo tabuleiro-inicial))
+         (linha-celula-simetrico (first simetrico))
+         (coluna-celula-simetrico (second simetrico)))
+         
+  (cond
+   ((verifica-duplo valor-cavalo) (substituir linha-celula-duplo coluna-celula-duplo tabuleiro-inicial))
+   ((null (verifica-duplo valor-cavalo)) (substituir linha-celula-simetrico coluna-celula-simetrico tabuleiro-inicial))
+   (t tabuleiro-inicial))))
+
+(defun substituir-casa-cavalo-preto (tabuleiro)
+  (let* ((valor-cavalo (pontuacao-inicial-cavalo-preto tabuleiro))
+         (tabuleiro-inicial (colocar-cavalo-preto tabuleiro))
+         (duplo (procura-duplo tabuleiro-inicial))
+         (linha-celula-duplo (first duplo))
+         (coluna-celula-duplo (second duplo))
+         (simetrico (procura-celula valor-cavalo tabuleiro-inicial))
+         (linha-celula-simetrico (first simetrico))
+         (coluna-celula-simetrico (second simetrico)))
+         
+  (cond
+   ((verifica-duplo valor-cavalo) (substituir linha-celula-duplo coluna-celula-duplo tabuleiro-inicial))
+   ((null (verifica-duplo valor-cavalo)) (substituir linha-celula-simetrico coluna-celula-simetrico tabuleiro-inicial))
+   (t tabuleiro-inicial))))
+
+(defun tabuleiro-inicial (tabuleiro jogador)
+  (list (substituir-casa-cavalo-preto (substituir-casa-cavalo-branco tabuleiro)) (pontuacao-inicial-cavalo-branco tabuleiro) (pontuacao-inicial-cavalo-preto tabuleiro) jogador))
 
 
 
@@ -575,13 +611,13 @@
    (t 
   (let ((estado (no-estado no)))
     (cond
-     ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 6 1)))
+     ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 7 1)))
                            (cond 
                             ((null jogada_aux) (jogada-humano ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador2*))
                             (t (metricas ficheiro) (jogada-humano ficheiro jogada_aux *Jogador2*)  ; manda a jogada ao adversário
                                ))))
          
-     ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 6 1)))
+     ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 7 1)))
                            (cond 
                             ((null jogada_aux2) (jogada-humano ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
                             (t (metricas ficheiro) (jogada-humano ficheiro jogada_aux2 *Jogador1*)  ; manda a jogada ao adversário
@@ -590,36 +626,33 @@
      )
     ))))
 
+
 (defun jogada-computador-computador (ficheiro no jogador)
   (cond
    ((equal (terminou-jogo no) T) (vencedor ficheiro no))
    (t 
-  (let ((estado (no-estado no)))
+    (let ((estado (no-estado no)))
     
-    (cond
-     ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 5 1)))
-                           (format t"~%------------------------------------------~%")
-      (escrever-estado ficheiro (no-estado no))
-                           (cond 
-                            ((null jogada_aux) (jogada-computador-computador ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador2*))
-                            (t (metricas ficheiro) (jogada-computador-computador ficheiro jogada_aux *Jogador2*) ; manda a jogada ao adversário
-                               ))))
+      (cond
+       ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 6 1)))
+
+                             (format t"~%------------------------------------------~%")
+                             (escrever-estado ficheiro (no-estado no))
+                             (cond 
+                              ((null jogada_aux) (jogada-computador-computador ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador2*))
+                              (t (metricas ficheiro) (jogada-computador-computador ficheiro jogada_aux *Jogador2*) ; manda a jogada ao adversário
+                                 ))))
          
-     ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 5 1)))
+       ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 5 1)))
 
-                           (cond 
-                            ((null jogada_aux2) (jogada-computador-computador ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
-                            (t (metricas ficheiro) (jogada-computador-computador ficheiro jogada_aux2 *Jogador1*)) ; manda a jogada ao adversário
-                            )))
-     (t nil)
-     )
-    ))))
+                             (cond 
+                              ((null jogada_aux2) (jogada-computador-computador ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
+                              (t (metricas ficheiro) (jogada-computador-computador ficheiro jogada_aux2 *Jogador1*)) ; manda a jogada ao adversário
 
-
-(defun calcular-profundidade (tempo)
-  "Função para calcular a profundidade máxima tendo como base o tempo limite"
-  ;(alterar-profundidade (/ (* (/ tempo 2) 10) "tempo"))
-)
+                              )))
+       (t nil)
+       )
+      ))))
 
 
 
