@@ -13,34 +13,92 @@
 
 (defvar *jogada* (list nil most-negative-fixnum))
 
+(let ((nos-analisados 0)
+      (cortes-alfa 0)
+      (cortes-beta 0)
+      (tempo-gasto 0)
+      (tempo-permitido 0)
+      (tempo-jogada 0)
+      (tempo-acabado 0))
+
+  (defun get-nos-analisados ()
+    nos-analisados)
+
+  (defun set-nos-analisados (numero-nos)
+    (setf nos-analisados numero-nos))
+  
+  (defun get-cortes-alfa ()
+    cortes-alfa)
+
+  (defun set-cortes-alfa (numero-cortes-alfa)
+    (setf cortes-alfa numero-cortes-alfa))
+
+  (defun get-cortes-beta ()
+    cortes-beta)
+
+  (defun set-cortes-beta (numero-cortes-beta)
+    (setf cortes-beta numero-cortes-beta))
+
+  (defun get-tempo-jogada ()
+    tempo-jogada)
+  
+  (defun set-tempo-jogada (tempo)
+    (setf tempo-jogada tempo))
+
+  (defun get-tempo-permitido ()
+    tempo-permitido)
+  
+  (defun set-tempo-permitido (tempo-perm)
+    (setf tempo-permitido tempo-perm))
+
+  (defun set-tempo-acabado (tempo-final)
+    (setf tempo-acabado tempo-final))
+  
+  (defun get-tempo-acabado ()
+    tempo-acabado)
+)
+
 (defun reset-jogada ()
   (setf *jogada* (list nil most-negative-fixnum)))
 
 (defun negamax-inicial (no d cor)
   (let* ((reset (reset-jogada))
-        (negamax (negamax no d cor)))
-  (first *jogada*)))
+        ; (tempo-acabado (set-tempo-acabado (+ (get-internal-real-time) (get-tempo-permitido))))
+         (reset-nos-analisados (set-nos-analisados 0))
+         (reset-cortes-beta (set-cortes-beta 0))
+         (reset-cortes-alfa (set-cortes-alfa 0))
+         ;(tempo-inicial (get-internal-real-time))
+         ;(reset-tempo-jogada (set-tempo-jogada 0))
+         (negamax (negamax no d cor)))
+         ;(tempo-jogada (set-tempo-jogada (- (get-internal-real-time) tempo-inicial))))
+    (first *jogada*)))
 
 (defun negamax-sucessores (d cor sucessores alfa beta &optional (bestValue most-negative-fixnum))
   (cond
    ((null sucessores) alfa)
    (t
-    (let* ((valorSucessor (- (negamax (first sucessores) d (- cor) (- beta) (- alfa))))
+    (let* ((valorSucessor (- (negamax (first sucessores) (- d 1) (- cor) (- beta) (- alfa))))
            (bestSucessor (max bestValue valorSucessor))
-           (aux (cond ((and (> bestSucessor (second *jogada*)) (equal (no-profundidade (first sucessores)) 1)) (setf *jogada* (list (first sucessores) bestSucessor)))))
+           (jogada (cond ((and (> bestSucessor (second *jogada*)) (equal (no-profundidade (first sucessores)) 1)) (setf *jogada* (list (first sucessores) bestSucessor)))))
            (newAlfa (max alfa bestSucessor)))
       (cond
-       ((>= newAlfa beta) bestSucessor)
+       ((>= newAlfa beta) (cortes cor) bestSucessor)
        (t (negamax-sucessores d cor (rest sucessores) newAlfa beta bestSucessor)))))))
 
+(defun cortes (cor)
+  (cond
+   ((equal cor 1) (set-cortes-alfa (+ (get-cortes-alfa) 1)))
+   (t (set-cortes-beta (+ (get-cortes-beta) 1)))))
 
-(defun negamax (no d cor &optional (alfa -1) (beta 1)) 
+
+(defun negamax (no d cor &optional (alfa -1) (beta 1))
+  (set-nos-analisados (+ (get-nos-analisados) 1))
   (let* ((sucessores (sucessores no (operadores)))
         (estado (no-estado no)))
     (cond
      ((null sucessores) (* cor (funcao-avaliacao-nos-folha (second estado) (third estado)))) 
      ((equal d 0) (* cor (funcao-avaliacao-pseudo-nos-folha (second estado) (third estado)))) 
-     (t (negamax-sucessores (- d 1) cor sucessores alfa beta)))))
+     (t (negamax-sucessores d cor sucessores alfa beta)))))
 
 
 (defun tabuleiro-teste ()
@@ -53,4 +111,4 @@
  (18 88 nil 05 55 64 85 13 41 86)
  (75 44 87 79 36 26 90 80 29 66)
  (12 58 40 72 84 59 06 08 50 46)
- (32 10 25 17 63 45 54 19 nil 65)) 2 35 -1))
+ (32 10 25 17 63 45 54 19 nil 65))))

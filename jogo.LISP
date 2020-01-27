@@ -232,6 +232,7 @@
   )
 
 
+
 ;;; ========================
 ;;;  OPERADORES DO PROBLEMA
 ;;; ========================
@@ -380,9 +381,8 @@
 ;;======================================================================================        
 
 (defun jogar (no tempo primeiro-jogador) 
-  (calcular-profundidade tempo) ; Calcula a profundidade máxima com base no tempo limite para a jogada do computador
+  ;(set-tempo-permitido (- tempo 100))
   (cond 
-     ; alternar entre os jogadores
    ((equal primeiro-jogador -1) (jogada-humano no *Jogador1*))
    (t (jogada-computador no *Jogador1*))
    )
@@ -396,11 +396,11 @@
 
 (defun jogada-humano (no jogador)
   (cond
-   ((equal (terminou-jogo no) T) (vencedor no) nil)
-   (t 
-    (escrever-estado t (no-estado no)) ; Escreve o tabuleiro e as pontuações
+   ((equal (terminou-jogo no) T) (vencedor no))
+   (T
     (let* ((posicoes (posicoes-validas no))
            (estado (no-estado no)))
+      (escrever-estado t (no-estado no))
       (escreve-posicoes-validas posicoes)
     
       (cond 
@@ -422,7 +422,7 @@
            ((and (equal jogador *Jogador2*) (movimento-válido linha coluna posicoes (no-tabuleiro estado)) (let ((jogada_aux2 (list (colocar-peca linha coluna estado) 0)))
                                                                                                              (jogada-computador jogada_aux2 *Jogador1*) ; manda a jogada ao adversário
                                                                                                              )))
-           (t  (format t "Movimento inválido! Escolha outra posição. ~%") (jogada-humano no jogador))
+           (T  (format t "Movimento inválido! Escolha outra posição. ~%") (jogada-humano no jogador))
            )
           )
         )
@@ -477,10 +477,10 @@
 
 (defun vencedor (no)
   "Função para determinar quem é o vencedor"
-  (let ((estado (no-estado no)))
+  (let* ((estado (no-estado no)))
     (cond
-     ((> (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (format t "Vencedor: Cavalo Branco ~%"))
-     ((< (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (format t "Vencedor: Cavalo Preto ~%"))
+     ((> (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (format t "~%------------------------------------- FIM DO JOGO -------------------------------------")(format t "~%Vencedor: Cavalo Branco ~%" )(format t"~%Pontos do cavalo branco: ~A~%" (no-pontos-cavalo-branco estado)) (format t"~%Pontos do cavalo preto: ~A~%~%" (no-pontos-cavalo-preto estado)) (escrever-tabuleiro t (no-tabuleiro estado)))
+     ((< (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (format t "~%------------------------------------- FIM DO JOGO -------------------------------------")(format t "~%Vencedor: Cavalo Preto ~%")(format t "~%Pontos do cavalo branco: ~A~%" (no-pontos-cavalo-branco estado)) (format t"~%Pontos do cavalo preto: ~A~%~%" (no-pontos-cavalo-preto estado))(escrever-tabuleiro t (no-tabuleiro estado)))
      (t (format t "Empate! ~%"))
      )
     )
@@ -511,6 +511,7 @@
 (defun posicoes-validas (no) 
   "Devolve todas as posições válidas para mover o cavalo"
   (obter-posicoes-validas (sucessores no (operadores)))
+ 
  )
 
 
@@ -530,31 +531,63 @@
   "Escreve a lista com os indices das posições válidas"
   (cond 
    ((null posicoes-validas) (format  t "~%Ups... Não há jogadas possíveis...:( ~%"))
-   (t (format t "~%Jogadas Possiveis: ~%~A" posicoes-validas))))
+   (t (format t "~%Jogadas Possiveis: ~%~A~%" posicoes-validas))))
 
 
 
 ;;======================================================================================
 ;;                                 JOGADA COMPUTADOR
 ;;======================================================================================        
+(defun metricas ()
+  (format t "~%---Métricas---~%")
+  (format t "~%Nós Analisados: ~%~A~%" (get-nos-analisados))
+  (format t "~%Cortes Beta: ~%~A~%" (get-cortes-beta))
+  (format t "~%Cortes Alfa: ~%~A~%" (get-cortes-alfa))
+  (format t "~%Tempo da jogada: ~%~A~%" (get-tempo-jogada))
+  (format t "~%--------------~%"))
 
 
 (defun jogada-computador (no jogador)
   (cond
-   ((equal (terminou-jogo no) T) (vencedor no) nil)
+   ((equal (terminou-jogo no) T) (vencedor no))
    (t 
   (let ((estado (no-estado no)))
     (cond
-     ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 2 1)))
+     ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 6 1)))
                            (cond 
-                            ((null jogada_aux) (jogada-humano (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -2))
-                            (t (jogada-humano jogada_aux -2) ; manda a jogada ao adversário
+                            ((null jogada_aux) (jogada-humano (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador2*))
+                            (t (metricas) (jogada-humano jogada_aux *Jogador2*)  ; manda a jogada ao adversário
                                ))))
          
-     ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 2 1)))
+     ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 6 1)))
                            (cond 
-                            ((null jogada_aux2) (jogada-humano (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) -1))
-                            (t (jogada-humano jogada_aux2 -1)) ; manda a jogada ao adversário
+                            ((null jogada_aux2) (jogada-humano (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
+                            (t (metricas)(jogada-humano jogada_aux2 *Jogador1*)  ; manda a jogada ao adversário
+                            ))))
+     (t nil)
+     )
+    ))))
+
+(defun jogada-computador-computador (no jogador)
+  (cond
+   ((equal (terminou-jogo no) T) (vencedor no))
+   (t 
+  (let ((estado (no-estado no)))
+    
+    (cond
+     ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 5 1)))
+                           (format t"~%------------------------------------------~%")
+      (escrever-estado t (no-estado no))
+                           (cond 
+                            ((null jogada_aux) (jogada-computador-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador2*))
+                            (t (metricas) (jogada-computador-computador jogada_aux *Jogador2*) ; manda a jogada ao adversário
+                               ))))
+         
+     ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 5 1)))
+
+                           (cond 
+                            ((null jogada_aux2) (jogada-computador-computador (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
+                            (t (metricas) (jogada-computador-computador jogada_aux2 *Jogador1*)) ; manda a jogada ao adversário
                             )))
      (t nil)
      )
@@ -572,7 +605,7 @@
 ;;                                 FUNÇÕES DE AVALIAÇÃO
 ;;======================================================================================        
 
-(defun funcao-avaliacao-nos-folha (pontos-jogador1 pontos-jogador2) ; (jogada => estado (tabuleiro + pontuação) + )
+(defun funcao-avaliacao-nos-folha (pontos-jogador1 pontos-jogador2) ; (jogada => estado (tabuleiro + pontuação))
   (cond
    ((> pontos-jogador1 pontos-jogador2) 1) ; ganha jogador 1 / perde jogador 2
    ((equal pontos-jogador1 pontos-jogador2) 0) ; empate
@@ -581,8 +614,8 @@
   )
 
 (defun funcao-avaliacao-pseudo-nos-folha (pontos-jogador1 pontos-jogador2)
-  ; max pontos = 5050
-  (/ (* 0.99 (- pontos-jogador1 pontos-jogador2)) 5050)
+  ; max pontos = 4950
+  (/ (* 0.99 (- pontos-jogador2 pontos-jogador1)) 4950)
   )
 
 
@@ -596,22 +629,26 @@
 (defun escrever-tabuleiro (f tabuleiro)
   ;(format f "~%Tabuleiro: ~%")
   (cond
-   ((null tabuleiro) nil)
-   (t (cons (escrever-linha-tabuleiro f (first tabuleiro)) (escrever-tabuleiro f (rest tabuleiro))))
+   ((null tabuleiro) (format t "------------------------------------------"))
+   (t (escrever-linha-tabuleiro f (car tabuleiro)) (escrever-tabuleiro f (cdr tabuleiro))))
    )
-  )
+  
 
 
 (defun escrever-linha-tabuleiro (f linha)
-  (format f "~%~A" linha)
-  )
+  (cond
+   ((null linha) (format t "~%"))
+   (t (format f "~3A|" (car linha)) (escrever-linha-tabuleiro f (cdr linha)))
+  ))
+
+
 
 (defun escrever-pontuacao-cavalo-branco (f pontos)
-  (format f "~%Pontuação cavalo branco: ~%~A" pontos)
+  (format f "~%~%Pontuação cavalo branco: ~%~A~%" pontos)
   )
 
 (defun escrever-pontuacao-cavalo-preto (f pontos)
-  (format f "~%Pontuação cavalo preto: ~%~A" pontos)
+  (format f "~%Pontuação cavalo preto: ~%~A~%" pontos)
   )
 
 (defun escrever-estado (f estado)

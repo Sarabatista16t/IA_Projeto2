@@ -9,14 +9,14 @@
 
 ;; CARREGAR FICHEIROS
 
-;(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP") 
-;(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
+(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP") 
+(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
 
 ;(load "C:\\Users\\Carolina\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP")
 ;(load "C:\\Users\\Carolina\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
 
-(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
-(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
+;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
+;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
 
 ;;=========================================
 ;;      INPUT E LEITURA DE FICHEIROS  
@@ -26,10 +26,11 @@
 (defun iniciar ()
   (let ((parametros (menu)))
     ;(with-open-file (f2 "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output) 
-      (jogar (list (posicionar-jogadores-no-tabuleiro (tabuleiro-aleatorio (baralhar (lista-numeros)) 10) (second parametros)) 0) (first parametros) (second parametros))
-     ; )
-    )
-  )
+    (cond 
+     ((equal (third parametros) 2) (jogada-computador-computador (list (posicionar-jogadores-no-tabuleiro (tabuleiro-aleatorio (baralhar (lista-numeros)) 10) (second parametros)) 0) (second parametros)))
+     (t (jogar (list (posicionar-jogadores-no-tabuleiro (tabuleiro-aleatorio (baralhar (lista-numeros)) 10) (second parametros)) 0) (first parametros) (second parametros))
+        )
+     )))
 
 
 
@@ -87,7 +88,7 @@
   (let* ((modo-jogo (perguntar-modo-jogo))
          (tempo (perguntar-tempo)))
     (cond 
-     ((= modo-jogo 2) (list tempo 'computador))
+     ((= modo-jogo 2) (list tempo -1 2))
      (t (let ((primeiro-jogador (perguntar-primeiro-jogador)))
           (cond
            ((= primeiro-jogador 1) (list tempo -1))
