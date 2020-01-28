@@ -91,7 +91,7 @@
 
 
 (defun procura-celula (valor tabuleiro &optional (indiceL 0) (indiceC 0))
-  "Retorna a celula "
+  "Retorna a celula com o valor simétrico do valor recebido"
   (cond
    ((null tabuleiro) nil)
    ((equal (celula 0 0 tabuleiro) (+ (* (mod valor 10) 10) (floor valor 10))) (list indiceL indiceC))
@@ -103,7 +103,7 @@
 
 
 (defun procura-duplo (tabuleiro &optional (indiceL 0) (indiceC 0) (indiceL-duplo (- 1)) (indiceC-duplo (- 1)) (duplo (- 1)))
-  "Função que procura o duplo ..."
+  "Função que procura a casa com o maior valor duplo no tabuleiro recebido"
   (cond
    ((null tabuleiro) (list indiceL-duplo  indiceC-duplo))
    ((null (car tabuleiro)) (procura-duplo (cdr tabuleiro) (+ indiceL 1) 0 indiceL-duplo indiceC-duplo duplo))
@@ -116,7 +116,8 @@
       
 
 
-(defun verifica-duplo (numero)                                           
+(defun verifica-duplo (numero) 
+  "Função que verifica se um numero passado por parâmetro é duplo"                                          
   (cond 
    ((equal numero nil) nil)
    ((< numero 0) nil)
@@ -244,34 +245,42 @@
 
 
 (defun operador-1 (estado)
+  "Função que aplica o operador 1"
   (operador-default estado 2 (- 1))
   )
 
 (defun operador-2 (estado)
+ "Função que aplica o operador 2"
   (operador-default estado 2 1 )
   )
 
 (defun operador-3 (estado)
+ "Função que aplica o operador 3"
   (operador-default estado 1 2 )
   )
 
 (defun operador-4 (estado)
+ "Função que aplica o operador 4"
   (operador-default estado (- 1) 2)
   )
 
 (defun operador-5 (estado)
+ "Função que aplica o operador 5"
   (operador-default estado (- 2) 1 )
   )
 
 (defun operador-6 (estado)
+ "Função que aplica o operador 6"
   (operador-default estado (- 2) (- 1))
   )
 
 (defun operador-7 (estado)
+ "Função que aplica o operador 7"
   (operador-default estado (- 1) (- 2))
   )
 
 (defun operador-8 (estado)
+ "Função que aplica o operador 8"
   (operador-default estado 1 (- 2))
   )
 
@@ -377,6 +386,7 @@
   )
 
 (defun substituir-casa-cavalo-branco (tabuleiro)
+  "Função que aplica as regras do jogo ao colocar o cavalo branco no tabuleiro inicial"
   (let* ((valor-cavalo (pontuacao-inicial-cavalo-branco tabuleiro))
          (tabuleiro-inicial (colocar-cavalo-branco tabuleiro))
          (duplo (procura-duplo tabuleiro-inicial))
@@ -392,6 +402,7 @@
    (t tabuleiro-inicial))))
 
 (defun substituir-casa-cavalo-preto (tabuleiro)
+  "Função que aplica as regras do jogo ao colocar o cavalo preto no tabuleiro inicial"
   (let* ((valor-cavalo (pontuacao-inicial-cavalo-preto tabuleiro))
          (tabuleiro-inicial (colocar-cavalo-preto tabuleiro))
          (duplo (procura-duplo tabuleiro-inicial))
@@ -407,6 +418,7 @@
    (t tabuleiro-inicial))))
 
 (defun tabuleiro-inicial (tabuleiro jogador)
+  "Função que retorna o tabuleiro inicial, com os cavalos na casa de maior valor da primeira e ultima linha, com as regras do jogo aplicadas (simétrico e duplo)"
   (list (substituir-casa-cavalo-preto (substituir-casa-cavalo-branco tabuleiro)) (pontuacao-inicial-cavalo-branco tabuleiro) (pontuacao-inicial-cavalo-preto tabuleiro) jogador))
 
 
@@ -417,6 +429,7 @@
 ;;======================================================================================        
 
 (defun jogar (ficheiro no tempo primeiro-jogador) 
+  "Função que inicia o jogo consoante o modo escolhido pelo utilizador"
   ;(set-tempo-permitido (- tempo 100))
   (cond 
    ((equal primeiro-jogador -1) (jogada-humano ficheiro no *Jogador1*))
@@ -431,11 +444,14 @@
 
 
 (defun jogada-humano (ficheiro no jogador)
+  "Função que permite o humano inserir posições e efetuar a jogada no tabuleiro"
   (cond
-   ((equal (terminou-jogo no) T) (vencedor ficheiro no))
+   ((equal (terminou-jogo no) T)  nil (vencedor ficheiro no))
    (T
-    (let* ((posicoes (posicoes-validas no))
-           (estado (no-estado no)))
+    (let* ((estado (no-estado no))
+           (posicoes (posicoes-validas no))
+           (posicoes-jogador-oposto (posicoes-validas (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto (no-jogador estado))) (no-profundidade no))))
+           )
       (escrever-estado ficheiro (no-estado no))
       (escreve-posicoes-validas posicoes)
     
@@ -452,13 +468,14 @@
          
           (cond
           
-           ((and (equal jogador *Jogador1*) (movimento-válido linha coluna posicoes (no-tabuleiro estado)) (let ((jogada_aux1 (list (colocar-peca linha coluna estado) 0))) 
+           ((and (equal jogador *Jogador1*) (movimento-válido linha coluna posicoes posicoes-jogador-oposto (no-tabuleiro estado)) (let ((jogada_aux1 (list (colocar-peca linha coluna estado) 0))) 
                                                                                                              (jogada-computador ficheiro jogada_aux1 *Jogador2*) ; manda a jogada ao adversário
                                                                                                              )))
-           ((and (equal jogador *Jogador2*) (movimento-válido linha coluna posicoes (no-tabuleiro estado)) (let ((jogada_aux2 (list (colocar-peca linha coluna estado) 0)))
+           ((and (equal jogador *Jogador2*) (movimento-válido linha coluna posicoes posicoes-jogador-oposto (no-tabuleiro estado)) (let ((jogada_aux2 (list (colocar-peca linha coluna estado) 0)))
                                                                                                              (jogada-computador ficheiro jogada_aux2 *Jogador1*) ; manda a jogada ao adversário
                                                                                                              )))
-           (T  (format t "Movimento inválido! Escolha outra posição. ~%") (jogada-humano ficheiro no jogador))
+           ((equal (verifica-posicoes-inseridas linha coluna posicoes) nil) (format t "Movimento inválido! Tente outra posição.~%") (jogada-humano ficheiro no jogador))
+           (t nil)
            )
           )
         )
@@ -467,6 +484,7 @@
     )
    )
   )
+
 
 
 ;;=================================================
@@ -517,12 +535,13 @@
     (cond
      ((> (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (escrever-vencedor ficheiro "Cavalo branco" estado))
      ((< (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado)) (escrever-vencedor ficheiro "Cavalo preto" estado))
-     (t (format ficheiro "Empate! ~%"))
+     (t (format ficheiro "Empate! ~%") (escrever-tabuleiro t estado))
      )
     )
   )
 
 (defun escrever-vencedor (ficheiro cavalo estado)
+  "Função para escrever no ecrã e no ficheiro quem é o vencedor, as pontuações finais dos jogadores e o tabuleiro final"
   (format ficheiro "~%------------------------------------- FIM DO JOGO -------------------------------------")
   (format ficheiro "~%Vencedor: ~A~%" cavalo)
   (format ficheiro"~%Pontos do cavalo branco: ~A~%" (no-pontos-cavalo-branco estado)) 
@@ -533,6 +552,7 @@
   (format t "~%Vencedor: ~A~%" cavalo)
   (format t"~%Pontos do cavalo branco: ~A~%" (no-pontos-cavalo-branco estado)) 
   (format t "~%Pontos do cavalo preto: ~A~%~%" (no-pontos-cavalo-preto estado)) 
+  (format t"~%------------------------------------------~%")
   (escrever-tabuleiro t (no-tabuleiro estado))
   )
 
@@ -541,11 +561,11 @@
 ;;  Funções de validação do movimento do cavalo do utilizador
 ;;==============================================================
 
-(defun movimento-válido (linha coluna posicoes-validas tabuleiro)
+(defun movimento-válido (linha coluna posicoes-validas posicoes-validas-oposto tabuleiro)
   "Verifica se é possível aplicar algum operador de modo a colocar o cavalo na posição que o utilizador pretende"
   (cond
    ((or (< coluna 0) (< linha 0) (>= linha (length tabuleiro)) (>= coluna (length (car tabuleiro)))) nil) ; verifica se está dentro dos limites do tabuleiro
-   ((verificar-operador-possivel posicoes-validas linha coluna) t) ; verifica se se podem aplicar operadores
+   ((and (null (casa-ameacada linha coluna posicoes-validas-oposto)) (verificar-operador-possivel posicoes-validas linha coluna)) t) ; verifica se se podem aplicar operadores
    (t nil)
    )
   )
@@ -584,11 +604,26 @@
    (t (format t "~%Jogadas Possiveis: ~%~A~%" posicoes-validas))))
 
 
+(defun verifica-posicoes-inseridas (linha coluna lista)
+  "Função que verifica se a linha e a coluna inserida pelo utilizador faz parte das posições possíveis"
+    (cond 
+     ((null lista) nil)
+     ((and (equal linha (first (first lista))) (equal coluna (second (first lista)))) t)
+     (t (verifica-posicoes-inseridas linha coluna (rest lista)))))
+
+(defun casa-ameacada (linha coluna posicoes-validas-jogador-oposto)
+  (cond
+   ((null posicoes-validas-jogador-oposto) nil)
+   ((and (equal linha (first (first posicoes-validas-jogador-oposto))) (equal coluna (second (first posicoes-validas-jogador-oposto)))) t)
+   (t (casa-ameacada linha coluna (rest posicoes-validas-jogador-oposto)))))
+
+
 
 ;;======================================================================================
 ;;                                 JOGADA COMPUTADOR
 ;;======================================================================================        
 (defun metricas (ficheiro)
+  "Função que escreve no ecrã e no ficheiro as métricas da jogada do computador"
   (format ficheiro "~%---Métricas---~%")
   (format ficheiro "~%Nós Analisados: ~%~A~%" (get-nos-analisados))
   (format ficheiro "~%Cortes Beta: ~%~A~%" (get-cortes-beta))
@@ -606,18 +641,19 @@
 
 
 (defun jogada-computador (ficheiro no jogador)
+  "Funçãon que permite o computador jogar, através do algoritmo negamax"
   (cond
-   ((equal (terminou-jogo no) T) (vencedor ficheiro no))
+   ((equal (terminou-jogo no) T) nil (vencedor ficheiro no))
    (t 
   (let ((estado (no-estado no)))
     (cond
-     ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 7 1)))
+     ((equal jogador -1) (let ((jogada_aux (negamax-inicial no 1 1)))
                            (cond 
                             ((null jogada_aux) (jogada-humano ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador2*))
                             (t (metricas ficheiro) (jogada-humano ficheiro jogada_aux *Jogador2*)  ; manda a jogada ao adversário
                                ))))
          
-     ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 7 1)))
+     ((equal jogador -2) (let* ((jogada_aux2 (negamax-inicial no 1 1)))
                            (cond 
                             ((null jogada_aux2) (jogada-humano ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
                             (t (metricas ficheiro) (jogada-humano ficheiro jogada_aux2 *Jogador1*)  ; manda a jogada ao adversário
@@ -628,8 +664,9 @@
 
 
 (defun jogada-computador-computador (ficheiro no jogador)
+  "Função que permite um computador jogar contra outro computador"
   (cond
-   ((equal (terminou-jogo no) T) (vencedor ficheiro no))
+   ((equal (terminou-jogo no) T) nil (vencedor ficheiro no))
    (t 
     (let ((estado (no-estado no)))
     
@@ -661,6 +698,7 @@
 ;;======================================================================================        
 
 (defun funcao-avaliacao-nos-folha (pontos-jogador1 pontos-jogador2) ; (jogada => estado (tabuleiro + pontuação))
+  "Função de avaliação para os nós folha do grafo"
   (cond
    ((> pontos-jogador1 pontos-jogador2) 1) ; ganha jogador 1 / perde jogador 2
    ((equal pontos-jogador1 pontos-jogador2) 0) ; empate
@@ -669,6 +707,7 @@
   )
 
 (defun funcao-avaliacao-pseudo-nos-folha (pontos-jogador1 pontos-jogador2)
+  "Função de avaliação para os nós pseudo-folha do grafo"
   ; max pontos = 4950
   (/ (* 0.99 (- pontos-jogador2 pontos-jogador1)) 4950)
   )
@@ -682,8 +721,9 @@
 
 
 (defun escrever-tabuleiro (f tabuleiro)
+  "Função que escreve o tabuleiro"
   (cond
-   ((null tabuleiro) (format t "------------------------------------------"))
+   ((null tabuleiro) (format t "------------------------------------------~%"))
    (t (escrever-linha-tabuleiro f (car tabuleiro)) (escrever-tabuleiro f (cdr tabuleiro))))
    )
   
