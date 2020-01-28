@@ -1,15 +1,16 @@
 ;; ================================================================================================================================
-;;                                            IMPLEMENTAÇÃO DO NEGAMAX 
+;;                                        IMPLEMENTAÇÃO DO NEGAMAX COM CORTES ALFA-BETA
 ;; ================================================================================================================================
 ;;;; procura.lisp
 ;;;; Disciplina de IA - 2019 / 2020
 ;;;; Projeto 2
-;;;; Autores: Sara Batista [nÂº 170221054] e Carolina Castilho [nÂº 180221071]
+;;;; Autores: Sara Batista [nº 170221054] e Carolina Castilho [nº 180221071]
 
 
 ;; =====================================================================
-;;                         NEGAMAX
+;;             Funções e variáveis auxiliares ao algoritmo
 ;; =====================================================================
+
 
 (defvar *jogada* (list nil most-negative-fixnum))
 
@@ -61,6 +62,12 @@
 (defun reset-jogada ()
   (setf *jogada* (list nil most-negative-fixnum)))
 
+
+
+;; =====================================================================
+;;                         NEGAMAX
+;; =====================================================================
+
 (defun negamax-inicial (no d cor)
   (let* ((reset (reset-jogada))
         ; (tempo-acabado (set-tempo-acabado (+ (get-internal-real-time) (get-tempo-permitido))))
@@ -72,6 +79,8 @@
          (negamax (negamax no d cor)))
          ;(tempo-jogada (set-tempo-jogada (- (get-internal-real-time) tempo-inicial))))
     (first *jogada*)))
+
+
 
 (defun negamax-sucessores (d cor sucessores alfa beta &optional (bestValue most-negative-fixnum))
   (cond
@@ -85,10 +94,6 @@
        ((>= newAlfa beta) (cortes cor) bestSucessor)
        (t (negamax-sucessores d cor (rest sucessores) newAlfa beta bestSucessor)))))))
 
-(defun cortes (cor)
-  (cond
-   ((equal cor 1) (set-cortes-alfa (+ (get-cortes-alfa) 1)))
-   (t (set-cortes-beta (+ (get-cortes-beta) 1)))))
 
 
 (defun negamax (no d cor &optional (alfa -1) (beta 1))
@@ -99,6 +104,12 @@
      ((null sucessores) (* cor (funcao-avaliacao-nos-folha (second estado) (third estado)))) 
      ((equal d 0) (* cor (funcao-avaliacao-pseudo-nos-folha (second estado) (third estado)))) 
      (t (negamax-sucessores d cor sucessores alfa beta)))))
+
+
+(defun cortes (cor)
+  (cond
+   ((equal cor 1) (set-cortes-alfa (+ (get-cortes-alfa) 1)))
+   (t (set-cortes-beta (+ (get-cortes-beta) 1)))))
 
 
 (defun tabuleiro-teste ()

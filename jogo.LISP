@@ -460,7 +460,7 @@
        ((and (equal jogador *Jogador2*) (equal posicoes nil)) (jogada-computador ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
        (t 
         (format t "~%~%Introduza a linha e a coluna onde pretende colocar a peça: ~%")
-        (format t "<letra> <numero de 1 a 10> ~%")
+        (format t "<numero de 0 a 9> <numero de 0 a 9> ~%")
         (let* ((numero (read))
                (linha (floor numero 10))
                (coluna (mod numero 10))
@@ -723,7 +723,7 @@
 (defun escrever-tabuleiro (f tabuleiro)
   "Função que escreve o tabuleiro"
   (cond
-   ((null tabuleiro) (format t "------------------------------------------~%"))
+   ((null tabuleiro) (format t "~%------------------------------------------~%"))
    (t (escrever-linha-tabuleiro f (car tabuleiro)) (escrever-tabuleiro f (cdr tabuleiro))))
    )
   

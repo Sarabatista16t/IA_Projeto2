@@ -9,14 +9,14 @@
 
 ;; CARREGAR FICHEIROS
 
-(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP") 
-(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
+;(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP") 
+;(load "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
 
 ;(load "C:\\Users\\Carolina\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\algoritmo.LISP")
 ;(load "C:\\Users\\Carolina\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\jogo.LISP")
 
-;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
-;(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
+(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\algoritmo.LISP")
+(load "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\jogo.LISP")
 
 ;;=========================================
 ;;      INPUT E LEITURA DE FICHEIROS  
@@ -25,8 +25,8 @@
 ;;; Inicialização do programa
 (defun iniciar ()
   (let ((parametros (menu)))
-    (with-open-file (f "C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\log.dat" :direction :output :if-exists :supersede)
-;"C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output :if-exists :supersede) 
+    (with-open-file (f "C:\\Users\\sarab\\Documents\\Faculdade\\CURSO EI\\5º Semestre\\Inteligência Artificial\\Projeto2\\Scripts\\IA_Projeto2\\log.dat" :direction :output :if-exists :supersede)
+;"C:\\Users\\carol\\OneDrive\\3ºAno\\IA\\Projeto 2\\IA_Projeto2\\IA_Projeto2\\log.dat" :direction :output :if-exists :supersede) 
       (escrever-cabecalho f)
       (cond 
        ((equal (third parametros) 2) (jogada-computador-computador f (list (posicionar-jogadores-no-tabuleiro (tabuleiro-aleatorio (baralhar (lista-numeros)) 10) (second parametros)) 0) (second parametros)))
@@ -99,9 +99,6 @@
 ;;                OUTPUT  
 ;;=========================================
 
-;; Função para escrever o tabuleiro no final do jogo num ficheiro
-
-;; Funções para escrever as estatisticas num ficheiro
 
 
 

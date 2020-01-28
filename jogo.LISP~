@@ -448,8 +448,10 @@
   (cond
    ((equal (terminou-jogo no) T)  nil (vencedor ficheiro no))
    (T
-    (let* ((posicoes (posicoes-validas no))
-           (estado (no-estado no)))
+    (let* ((estado (no-estado no))
+           (posicoes (posicoes-validas no))
+           (posicoes-jogador-oposto (posicoes-validas (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto (no-jogador estado))) (no-profundidade no))))
+           )
       (escrever-estado ficheiro (no-estado no))
       (escreve-posicoes-validas posicoes)
     
@@ -458,7 +460,8 @@
        ((and (equal jogador *Jogador2*) (equal posicoes nil)) (jogada-computador ficheiro (list (list (no-tabuleiro estado) (no-pontos-cavalo-branco estado) (no-pontos-cavalo-preto estado) (jogador-oposto jogador)) 0) *Jogador1*))
        (t 
         (format t "~%~%Introduza a linha e a coluna onde pretende colocar a peça: ~%")
-        (format t "<letra> <numero de 1 a 10> ~%")
+        (format t "<LINHA> <COLUNA>~%")
+        (format t "<numero de 1 a 10> <numero de 1 a 10> ~%")
         (let* ((numero (read))
                (linha (floor numero 10))
                (coluna (mod numero 10))
@@ -466,10 +469,10 @@
          
           (cond
           
-           ((and (equal jogador *Jogador1*) (movimento-válido linha coluna posicoes (no-tabuleiro estado)) (let ((jogada_aux1 (list (colocar-peca linha coluna estado) 0))) 
+           ((and (equal jogador *Jogador1*) (movimento-válido linha coluna posicoes posicoes-jogador-oposto (no-tabuleiro estado)) (let ((jogada_aux1 (list (colocar-peca linha coluna estado) 0))) 
                                                                                                              (jogada-computador ficheiro jogada_aux1 *Jogador2*) ; manda a jogada ao adversário
                                                                                                              )))
-           ((and (equal jogador *Jogador2*) (movimento-válido linha coluna posicoes (no-tabuleiro estado)) (let ((jogada_aux2 (list (colocar-peca linha coluna estado) 0)))
+           ((and (equal jogador *Jogador2*) (movimento-válido linha coluna posicoes posicoes-jogador-oposto (no-tabuleiro estado)) (let ((jogada_aux2 (list (colocar-peca linha coluna estado) 0)))
                                                                                                              (jogada-computador ficheiro jogada_aux2 *Jogador1*) ; manda a jogada ao adversário
                                                                                                              )))
            ((equal (verifica-posicoes-inseridas linha coluna posicoes) nil) (format t "Movimento inválido! Tente outra posição.~%") (jogada-humano ficheiro no jogador))
@@ -559,11 +562,11 @@
 ;;  Funções de validação do movimento do cavalo do utilizador
 ;;==============================================================
 
-(defun movimento-válido (linha coluna posicoes-validas tabuleiro)
+(defun movimento-válido (linha coluna posicoes-validas posicoes-validas-oposto tabuleiro)
   "Verifica se é possível aplicar algum operador de modo a colocar o cavalo na posição que o utilizador pretende"
   (cond
    ((or (< coluna 0) (< linha 0) (>= linha (length tabuleiro)) (>= coluna (length (car tabuleiro)))) nil) ; verifica se está dentro dos limites do tabuleiro
-   ((verificar-operador-possivel posicoes-validas linha coluna) t) ; verifica se se podem aplicar operadores
+   ((and (null (casa-ameacada linha coluna posicoes-validas-oposto)) (verificar-operador-possivel posicoes-validas linha coluna)) t) ; verifica se se podem aplicar operadores
    (t nil)
    )
   )
@@ -608,6 +611,12 @@
      ((null lista) nil)
      ((and (equal linha (first (first lista))) (equal coluna (second (first lista)))) t)
      (t (verifica-posicoes-inseridas linha coluna (rest lista)))))
+
+(defun casa-ameacada (linha coluna posicoes-validas-jogador-oposto)
+  (cond
+   ((null posicoes-validas-jogador-oposto) nil)
+   ((and (equal linha (first (first posicoes-validas-jogador-oposto))) (equal coluna (second (first posicoes-validas-jogador-oposto)))) t)
+   (t (casa-ameacada linha coluna (rest posicoes-validas-jogador-oposto)))))
 
 
 
@@ -715,7 +724,7 @@
 (defun escrever-tabuleiro (f tabuleiro)
   "Função que escreve o tabuleiro"
   (cond
-   ((null tabuleiro) (format t "------------------------------------------~%"))
+   ((null tabuleiro) (format t "~%------------------------------------------~%"))
    (t (escrever-linha-tabuleiro f (car tabuleiro)) (escrever-tabuleiro f (cdr tabuleiro))))
    )
   
